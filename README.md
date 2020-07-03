@@ -32,7 +32,7 @@
 
 1. Get StockNote Java Bridge Jar from the below link
 
-	*  https://github.com/Thasarathan/Java-Bridge/blob/master/dist/swagger-java-client.jar
+    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/stocknote-bridge-java-1.0.0.jar
 
 2. Setup Jar File
 
