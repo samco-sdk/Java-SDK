@@ -17,7 +17,9 @@
    * As an initial step, users need to use the Login method for connecting to APIs and in the Java response bean object you will get user session identifier. Using the session identifier, users can access other API’s
     
    * With StockNote API being a REST based interface and it uses JSON request and response messages, Java SDK provides request and response objects as native Java beans (after appropriate serialisation / de-serialisation)
-   
+
+   * For specific details on parameters passed on the request, and details about API response, please refer our [Stocknote API documentation (https://developers.stocknote.com/api/?python#stocknote-api-documentation).  
+ 
 ### Note
 
    * All API response displayed in this documentation are JSON representation of response java object 
