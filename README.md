@@ -10,15 +10,13 @@
    
    * Java SDK will be exposed as a downloadable JAR file
    
-   * Include the JAR file into their build path and access the trade APIs using the inbuilt classes in Java SDK
+   * Include the JAR file in your build path and access the trade APIs using the inbuilt classes in Java SDK
    
-   * Different Java classes and methods will be exposed in the SDK for handling the multiple Stocknote APIs
+   * Different Java classes and methods are exposed in the SDK for handling different Stocknote APIs
    
-   * As an initial step, the client will use the Login method and in the Java response bean object, they will get user session identifier. Based on the user session identifier, they will be able to access other API’s
-   
-   * Client can process the API response appropriately
-   
-   * With StockNote API being a REST based interface and interfaces using JSON request and response messages, Java SDK provides request and response objects as native Java beans (after appropriate serialisation / de-serialisation)
+   * As an initial step, customers need to use the Login method for connecting to APIs and in the Java response bean object you will get user session identifier. Using the session identifier, customers can access other API’s
+    
+   * With StockNote API being a REST based interface and it uses JSON request and response messages, Java SDK provides request and response objects as native Java beans (after appropriate serialisation / de-serialisation)
    
 ### Note
 
