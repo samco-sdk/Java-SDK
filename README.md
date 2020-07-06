@@ -1,4 +1,4 @@
-# Java Bridge for Stocknote API
+# StockNoteBridge - Java Bridge for Stocknote API
 
    Official Java Bridge for accessing Stocknote API
    
