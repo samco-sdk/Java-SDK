@@ -6,7 +6,7 @@
 
 ## Overview
 
-   * Java SDK is created for clients to easily access our Stocknote API platform from Java based applications.
+   * Java SDK is created for users to easily access our Stocknote API platform from Java based applications.
    
    * Java SDK will be exposed as a downloadable JAR file
    
@@ -14,7 +14,7 @@
    
    * Different Java classes and methods are exposed in the SDK for handling different Stocknote APIs
    
-   * As an initial step, customers need to use the Login method for connecting to APIs and in the Java response bean object you will get user session identifier. Using the session identifier, customers can access other API’s
+   * As an initial step, users need to use the Login method for connecting to APIs and in the Java response bean object you will get user session identifier. Using the session identifier, users can access other API’s
     
    * With StockNote API being a REST based interface and it uses JSON request and response messages, Java SDK provides request and response objects as native Java beans (after appropriate serialisation / de-serialisation)
    
@@ -137,7 +137,7 @@
     ]
    }
     
-#### Using the session token we can call other API’s through java SDK
+#### Using the session token users can call other API’s through java SDK
 
 ### <h3 id="equity_search">Search Equity & Derivative:</h3>
 
@@ -183,7 +183,7 @@
 
 ###  <h3 id="quote">Quote:</h3>
 
-   Get market depth details for a specific equity scrip including but not limited to values like last trade price, previous close price, change value, change percentage, bids/asks, upper and lower circuit limits etc. This helps user with market picture of an equity scrip using which he will be able to place an order.
+   This API can be used to get market depth details for a specific equity scrip including but not limited to values like last trade price, previous close price, change value, change percentage, bids/asks, upper and lower circuit limits etc. This helps user with market picture of an equity scrip using which he will be able to place an order.
 
 #### Parameters:
 
@@ -327,7 +327,7 @@
 
 ### <h3 id="placeorder">PlaceOrder:</h3>
 
-   To place an equity/derivative order to the exchange i.e the place order request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. To be precise, under normal scenarios, the whole flow of order execution starting with order placement, routing to OMS and transfer to the exchange, order execution, and confirmation from exchange happen real time. But due to various reasons like market hours, exchange related checks etc. This may not happen instantly. So when an order is successfully placed the PlaceOrder API returns an OrderNumber in response, and in scenarios as above the actual order status can be checked separately using the OrderStatus API call .This is for Placing CNC, MIS and NRML Orders.
+   To place an equity/derivative order with the exchange i.e the place order request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the PlaceOrder API returns an OrderNumber in response, and the actual order status can be checked separately using the OrderStatus API call .This is for Placing CNC, MIS and NRML Orders.
     
 #### Parameters:
 
@@ -381,7 +381,7 @@
 
 ### <h3 id="placeorderBO">PlaceOrderBO:</h3>
 
-   To place an equity/derivative order to the exchange i.e the place order BO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. To be precise, under normal scenarios, the whole flow of order execution starting with order placement, routing to OMS and transfer to the exchange, order execution, and confirmation from exchange happen real time. But due to various reasons like market hours, exchange related checks etc. This may not happen instantly. So when an order is successfully placed the placeOrderBO returns an orderNumber in response, and in scenarios as above the actual order status can be checked separately using the orderStatus API call. This is for Placing BO Orders.
+   To place an equity/derivative BO order with the exchange i.e the place order BO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the placeOrderBO returns an orderNumber in response, and the actual order status can be checked separately using the orderStatus API call.
         
 #### Parameters:
 
@@ -439,7 +439,7 @@
 
 ### <h3 id="placeorderCO">PlaceOrderCO:</h3>
 
-   To place an equity/derivative order to the exchange i.e the place order CO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. To be precise, under normal scenarios, the whole flow of order execution starting with order placement, routing to OMS and transfer to the exchange, order execution, and confirmation from exchange happen real time. But due to various reasons like market hours, exchange related checks etc. This may not happen instantly. So when an order is successfully placed the placeOrderCO returns an orderNumber in response, and in scenarios as above the actual order status can be checked separately using the orderStatus API call. This is for Placing CO Orders.
+   To place an equity/derivative CO order with the exchange i.e the place order CO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the placeOrderCO returns an orderNumber in response, and in scenarios as above the actual order status can be checked separately using the orderStatus API call.
         
 #### Parameters:
 
@@ -592,7 +592,10 @@
 
 ### <h3 id="triggerorder">TriggerOrders:</h3>
 
-   To get the trigger order numbers in case of BO and CO orders so that their attribute values can be modified for BO orders, it will give the order identifiers. For Stop loss leg and target leg. Similarly for CO orders, it will return order identifier of stop loss leg only. Using the order identifier, the user would be able to modify the order attributes using the modifyOrder API. Refer modifyOrder API documentation for the parameters details. 
+This API is used to get the trigger order numbers in case of BO and CO orders so that their attribute values can be modified. 
+For BO orders, it will give the order identifiers for Stop loss leg and target leg. 
+For CO orders, it will return order identifier of stop loss leg only. 
+Using the order identifier, the user would be able to modify the order attributes using the modifyOrder API. 
         
 #### Parameters:
 
@@ -691,7 +694,9 @@
 
 ### <h3 id="cancelorderCO">CancelOrderCO:</h3>
 
-   For Cancellation/exit of CO orders pass main leg Order number. If main leg is in Open/Pending state that order will be cancelled. If the main leg is executed and the sublegs are created and in open/Trigger pending state, the order will be exited. If the main leg is executed and if Stop loss is hit, API will return error message "SubOrder is in Executed status. Cannot exit/cancel such orders.
+   For Cancellation/exit of CO orders pass main leg Order number. If main leg is in Open/Pending state that order will be cancelled. 
+   If the main leg is executed and the sublegs are created and in open/Trigger pending state, the order will be exited. 
+   If the main leg is executed and if Stop loss is hit, API will return error message "SubOrder is in Executed status. Cannot exit/cancel such orders.
   
 #### Parameters:
 
@@ -714,7 +719,9 @@
 
 ### <h3 id="cancelorderBO">CancelOrderBO:</h3>
 
-   For Cancellation/exit of BO orders pass main leg Order number. If main leg is in Open/Pending state that order will be cancelled. If the main leg is executed and the sublegs are created and in open/Trigger pending state, the order will be exited. If the main leg is executed and if either of Stop loss or target is hit, API will return error message "SubOrder is in Executed status. Cannot exit/cancel such orders.
+   For Cancellation/exit of BO orders pass main leg Order number. 
+   If main leg is in Open/Pending state that order will be cancelled. If the main leg is executed and the sublegs are created and in open/Trigger pending state, the order will be exited. 
+   If the main leg is executed and if either of Stop loss or target is hit, API will return error message "SubOrder is in Executed status. Cannot exit/cancel such orders.
         
 #### Parameters:
 
