@@ -26,7 +26,7 @@
    
 ### Prerequisites 
 
-* Java 8 JDK
+* Java 7 and above
 
 ### Steps
 
@@ -40,21 +40,26 @@
 
     * Install jar file into your local .m2 repository using the below command :
     
-      mvn install:install-file -Dfile="where the jar is located" -DgroupId=in.samco -DartifactId=stocknote-bridge-java -Dversion=1.0.0 -Dpackaging=jar
+      mvn install:install-file -Dfile="[path to jar]/java_sdk.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=io.samco -DartifactId=stocknote-bridge-java -Dversion=1.0.0 -Dpackaging=jar
 	
     * Add the below dependency into pom.xml file .
 	
 	            <dependency>
-		           <groupId>in.samco</groupId>
+		           <groupId>io.samco</groupId>
 		           <artifactId>stocknote-bridge-java</artifactId>
 		           <version>1.0.0</version>
 	           </dependency>
 
-     * For gradle user 
+     * For gradle user use the same maven command for install jar into local repository
 
-                    dependencies {
-   			             compile group: 'in.samco', name: 'stocknote-bridge-java', version: '1.0.0'
-			         }
+                    
+		    repositories {
+ 				         mavenLocal()
+				      }
+		    
+		    dependencies {
+   			                compile group: 'io.samco', name: 'stocknote-bridge-java', version: '1.0.0'
+			             }
 
      * Adding jar to build path in eclipse based IDE's 
      
