@@ -58,7 +58,7 @@
 				      }
 		    
 		    dependencies {
-   			                compile group: 'io.samco', name: 'stocknote-bridge-java', version: '1.0.0'
+   			                implementation 'io.samco:stocknote-bridge-java:1.0.0'
 			             }
 
      * Adding jar to build path in eclipse based IDE's 
