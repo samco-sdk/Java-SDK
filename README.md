@@ -982,7 +982,7 @@ Using the order identifier, the user would be able to modify the order attribute
 #### Sample IntraDayCandleData Request:
 
     IntraDayCandleDataApi intraDayCandleDataApi = new IntraDayCandleDataApi();
-    IntraDayCandleResponses intraDayCandleResponses = intraDayCandleDataApi.getIntradayCandleData(xSessionToken, "INFY", "2020-04-20", SamcoConstants.EXCHANGE_BSE, "2020-05-10");
+    IntraDayCandleResponses intraDayCandleResponses = intraDayCandleDataApi.getIntradayCandleData(xSessionToken, "INFY", "2020-04-27 11:50:00", SamcoConstants.EXCHANGE_BSE, "2020-04-27 12:29:00");
 
 #### Sample IntraDayCandleData Response:
 
@@ -1024,7 +1024,7 @@ Using the order identifier, the user would be able to modify the order attribute
 #### Sample IndexIntraDayCandleData Request:
 
     IntraDayCandleDataApi intraDayCandleDataApi = new IntraDayCandleDataApi();
-    IndexIntraDayCandleDataResponse indexIntradayCandleData = intraDayCandleDataApi.getIndexIntradayCandleData(xSessionToken, "NIFTY 200", "2020-01-15", "2020-02-10");
+    IndexIntraDayCandleDataResponse indexIntradayCandleData = intraDayCandleDataApi.getIndexIntradayCandleData(xSessionToken, "NIFTY 200", "2019-08-26 09:07:00", "2019-08-26 09:16:00");
 
 #### Sample IndexIntraDayCandleData Response:
 
