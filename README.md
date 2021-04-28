@@ -32,7 +32,7 @@
 
 1. Get StockNote Java Bridge Jar from the below link
 
-    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/stocknote-bridge-java-1.0.0.jar
+    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/stocknote-bridge-java-1.0.1.jar
 
 2. Setup Jar File
 
@@ -40,14 +40,14 @@
 
     * Install jar file into your local .m2 repository using the below command :
     
-      mvn install:install-file -Dfile="[path to jar]/java_sdk.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=io.samco -DartifactId=stocknote-bridge-java -Dversion=1.0.0 -Dpackaging=jar
+      mvn install:install-file -Dfile="[path to jar]/java_sdk.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=io.samco -DartifactId=stocknote-bridge-java -Dversion=1.0.1 -Dpackaging=jar
 	
     * Add the below dependency into pom.xml file .
 	
 	            <dependency>
 		           <groupId>io.samco</groupId>
 		           <artifactId>stocknote-bridge-java</artifactId>
-		           <version>1.0.0</version>
+		           <version>1.0.1</version>
 	           </dependency>
 
      * For gradle user use the same maven command for install jar into local repository
@@ -58,12 +58,12 @@
 				      }
 		    
 		    dependencies {
-   			                implementation 'io.samco:stocknote-bridge-java:1.0.0'
+   			                implementation 'io.samco:stocknote-bridge-java:1.0.1'
 			             }
 
      * Adding jar to build path in eclipse based IDE's 
      
-        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include stocknote-bridge-java-1.0.0.jar 
+        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include stocknote-bridge-java-1.0.1.jar 
             
 			   
 			   
@@ -588,7 +588,8 @@
         "pendingQuantity" : "1",
         "totalQuanity" : "1",
         "optionType" : "XX",
-        "orderPlaceBy" : "--"
+        "orderPlaceBy" : "--",
+	"orderSource" : "NEST_REST_TA"
        } ]
     }
 
@@ -837,6 +838,7 @@ Using the order identifier, the user would be able to modify the order attribute
         "netQuantity" : "10",
         "netValue" : "-6690.00",
         "positionType" : "DAY",
+	"sellQuantity" : "0",
         "positionConversions" : [ "CNC", "NRML" ],
         "soldValue" : "0.00",
         "transactionType" : "BUY",
