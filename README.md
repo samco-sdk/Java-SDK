@@ -589,7 +589,7 @@
         "totalQuanity" : "1",
         "optionType" : "XX",
         "orderPlaceBy" : "--",
-	"orderSource" : "NEST_REST_TA"
+	    "orderSource" : "NEST_REST_TA"
        } ]
     }
 
@@ -838,7 +838,7 @@ Using the order identifier, the user would be able to modify the order attribute
         "netQuantity" : "10",
         "netValue" : "-6690.00",
         "positionType" : "DAY",
-	"sellQuantity" : "0",
+	    "sellQuantity" : "0",
         "positionConversions" : [ "CNC", "NRML" ],
         "soldValue" : "0.00",
         "transactionType" : "BUY",
