@@ -2,7 +2,7 @@
 
    Official Java Bridge for accessing Stocknote API
    
-   This documentation covers details of the Java bridge / SDK provided by SAMCO, for accessing the <a href="https://developers.stocknote.com/api/?python#stocknote-api-documentation">SAMCO Stocknote APIs.</a>
+   This documentation covers details of the Java bridge / SDK provided by SAMCO, for accessing the <a href="https://docs-tradeapi.samco.in/#samco-api-documentation">SAMCO Stocknote APIs.</a>
 
 ## Overview
 
@@ -18,7 +18,7 @@
     
    * With StockNote API being a REST based interface and it uses JSON request and response messages, Java SDK provides request and response objects as native Java beans (after appropriate serialisation / de-serialisation)
 
-   * For specific details on parameters passed on the request, and details about API response, please refer our [Stocknote API documentation](https://developers.stocknote.com/api/?python#stocknote-api-documentation).  
+   * For specific details on parameters passed on the request, and details about API response, please refer our [Stocknote API documentation](https://docs-tradeapi.samco.in/#samco-api-documentation).  
  
 ### Note
 
@@ -70,9 +70,14 @@
 ###  List of supported API
 
  *  <a href="#login">Login</a>
+ *  <a href="#personalindex">PersonalIndex</a>
  *  <a href="#equity_search">SearchEquityDerivative</a>
  *  <a href="#quote">Quote</a>
+ *  <a href="#indexquote">IndexQuote</a>
+ *  <a href="#multiquote">MultiQuote</a>
+ *  <a href="#spanmargin">SpanMargin</a>
  *  <a href="#optionchain">OptionChain</a>
+ *  <a href="#futurechain">FutureChain</a>   
  *  <a href="#limit">UserLimits</a>
  *  <a href="#placeorder">PlaceOrder</a>
  *  <a href="#placeorderBO">PlaceOrderBO</a>
@@ -84,6 +89,13 @@
  *  <a href="#cancel_order">CancelOrder</a>
  *  <a href="#cancelorderCO">CancelOrderCO</a>
  *  <a href="#cancelorderBO">CancelOrderBO</a>
+ *  <a href="#addGtt">AddGTT</a>
+ *  <a href="#modifyGtt">ModifyGTT</a>
+ *  <a href="#deleteGtt">DeleteGTT</a>
+ *  <a href="#addOco">AddOco</a>
+ *  <a href="#modifyOco">ModifyOco</a>
+ *  <a href="#deleteOco">DeleteOco</a>
+ *  <a href="#listGttOco">ListGttOco</a>
  *  <a href="#tradebook">TradeBook</a>
  *  <a href="#positions">Positions</a>
  *  <a href="#positionConversion">PositionConversion</a>
@@ -140,6 +152,46 @@
    }
     
 #### Using the session token users can call other API’s through java SDK
+
+
+
+
+
+
+### <h3 id="personalindex">PersonalIndex:</h3>
+
+The Index Data API shows the user's personal index. It shows the overall profit and loss of all the trades done by the user.
+
+    
+#### Sample Personal Index Request:
+```java
+IndexDataAPI indexdataApi = new IndexDataAPI();
+IndexDataResponse indexresponse = indexdataApi.getindexData(xSessionToken);
+
+```
+ 
+#### Sample Personal Index Response:
+```json
+{
+    "serverTime": "03/06/24 18:46:17",
+    "msgId": "0cb0cf30-4b27-494e-9048-6313671cf00a",
+    "status": "Success",
+    "statusMessage": "Index Data retrieved successfully",
+    "indexData": {
+        "indexName": "MOHAMMAD Index",
+        "networth": "269.53",
+        "indexData": {
+            "index": "1.72",
+            "indexChange": "0.05",
+            "indexChangePercentage": "3.01",
+            "latestTime": "2024-06-03 17:01:00",
+            "networthChange": "7.88",
+            "networthChangePercentage": "3.01",
+            "fundReceipt": "0.00"
+        }
+    }
+}
+```
 
 ### <h3 id="equity_search">Search Equity & Derivative:</h3>
 
@@ -256,192 +308,487 @@
       "listingId": "3045_NSE"
       }
 
+
+
+
+
+###  <h3 id="indexquote">IndexQuote:</h3>
+
+Getting Index Quote details for a specific Indicies. This helps user with market picture of an specific Index Details.
+
+
+#### Parameters:
+
+```java
+xSessionToken, exchange, symbolName
+```
+    
+#### Sample Quote request:
+
+```java
+QuoteApi quoteApi = new QuoteApi();
+IndexDetailsResponse indexQuote = quoteApi.getIndexQuote(xSessionToken, "NIFTY 50");
+```
+     
+#### Sample Quote Response:
+```json
+{
+  "serverTime": "03/06/24 18:19:04",
+  "msgId": "8c5dbe1f-cb01-4fd8-a5e9-49202bd4a121",
+  "status": "Success",
+  "statusMessage": "Index Quote details retrieved successfully",
+  "indexDetails": [
+    {
+      "indexName": "Nifty 50",
+      "listingId": "-21",
+      "lastTradedTime": "2024-06-03 15:32:05.0",
+      "spotPrice": 23263.9,
+      "changePercentage": 3.25,
+      "averagePrice": 0.0,
+      "openValue": 23337.9,
+      "highValue": 23338.7,
+      "lowValue": 23062.3,
+      "closeValue": 23263.9,
+      "totalBuyQuantity": 0,
+      "totalSellQuantity": 0,
+      "totalTradedValue": 0,
+      "totalTradedVolume": 0,
+      "change": 733.2
+    }
+  ]
+}
+
+```
+
+
+###  <h3 id="multiquote">MultiQuote:</h3>
+
+
+#### Parameters:
+
+```java
+xSessionToken, BSE, NSE,NFO,BFO,INDEX,CDS,MFO,MCX
+```
+    
+#### Sample multi Quote request:
+
+```java
+Map<String, List<String>> multiQuoteRequest = new HashMap<>();
+multiQuoteRequest.put("NSE", Arrays.asList("BAJAJ-AUTO"));
+multiQuoteRequest.put("BSE", Arrays.asList("INFY"));
+MultiQuoteAPI multiQuoteService = new MultiQuoteAPI();
+MultiQuoteResponse response = multiQuoteService.postMultiQuote(xSessionToken, multiQuoteRequest);
+```
+     
+#### Sample Quote Response:
+```json
+{
+    "serverTime": "03/06/24 18:49:07",
+    "msgId": "6dcbebfd-4d91-4b42-85c1-c8d094f705da",
+    "status": "Success",
+    "statusMessage": "Multiquotes data retrieved successfully",
+    "invalidSymbol": [
+        "BAJAJ-AUTOs"
+    ],
+    "multiQuotes": [
+        {
+            "exchange": "BSE",
+            "symbolName": "INFY",
+            "tradingSymbol": "INFY",
+            "companyName": "INFOSYS LTD.",
+            "isin": "INE009A01021",
+            "lotSize": "1",
+            "averagePrice": "1404.00",
+            "totalTradeVolume": "182274",
+            "symbol": "500209_BSE",
+            "lastTradeTime": "03 Jun 2024, 04:01:44 PM",
+            "lastTradeQuantity": "14",
+            "lastTradePrice": "1405.90",
+            "misMultiplier": "4.00",
+            "change": "-0.35",
+            "changePercent": "-0.02",
+            "open": "1435.15",
+            "close": "1405.90",
+            "previousClose": "1406.25",
+            "low": "1404.00",
+            "high": "1439.05",
+            "tickSize": "0.05",
+            "bidSize": "0",
+            "bidPrice": "0.00",
+            "totalTradedValue": "257144870.02",
+            "askSize": "0",
+            "askPrice": "0.00"
+        }
+    ]
+}
+
+```
+
+###  <h3 id="spanmargin">SpanMargin:</h3>
+
+
+#### Parameters:
+
+```text
+xSessionToken, exchange, tradingSymbol, qty
+```
+    
+#### Sample multi Quote request:
+
+```java
+SpanMarginRequest spanMarginRequest = new SpanMarginRequest();
+
+List<SpanMarginRequestItem> requestItems = new ArrayList<>();
+requestItems.add(new SpanMarginRequestItem("NFO", "NIFTY06JUN2423200PE", "25"));
+requestItems.add(new SpanMarginRequestItem("NFO", "NIFTY24JUNFUT", "25"));
+spanMarginRequest.setRequest(requestItems);
+
+SpanMarginAPI spanMarginService = new SpanMarginAPI();
+SpanMarginResponse spanresponse = spanMarginService.postSpanMarginData(xSessionToken, spanMarginRequest);
+```  
+#### Sample Quote Response:
+```json
+{
+    "serverTime": "03/06/24 19:31:08",
+    "msgId": "9988d21e-c5d6-4e18-a024-5cdc21004dda",
+    "status": "Success",
+    "statusMessage": "Span margin calculated",
+    "spanDetails": {
+        "totalRequirement": "13666.21",
+        "spanRequirement": "1941.21",
+        "exposureMargin": "11725.00",
+        "spreadBenefit": "00.00"
+    }
+}
+```
+
 ### <h3 id="optionchain">OptionChain:</h3>
 
-    To search OptionChain for equity, derivatives and commodity scrips based on user provided search symbol and exchange name. 
+To search OptionChain for equity, derivatives and commodity scrips based on user provided search symbol and exchange name. 
       
 #### Parameters:
 
-    xSessionToken, searchSymbolName, exchange, expiryDate, strikePrice, optionType
+```text
+xSessionToken, searchSymbolName, exchange, expiryDate, strikePrice, optionType
+```
     
 #### Sample OptionChain Request:
 
-    OptionApi optionApi = new OptionApi();
-    OptionChainResponse optionChainResponse = optionApi.getOptionContracts(xSessionToken, "INFY", SamcoConstants.EXCHANGE_NSE, "2020-06-25", "950", "CE");
+```java
+
+OptionApi optionApi = new OptionApi();
+OptionChainResponse optionChainResponse = optionApi.getOptionContracts(xSessionToken, "INFY", SamcoConstants.EXCHANGE_NSE, "2020-06-25", "950", "CE");
+
+```
 
 #### Sample OptionChain Response:
 
-    {
-      "serverTime" : "01/06/20 18:49:55",
-      "msgId" : "5e1e2e47-6565-457e-9d10-4e2b7d09d15b",
-      "status" : "Success",
-      "statusMessage" : "OptionChain details retrived successfully. ",
-      "optionChainDetails" : [ {
-        "tradingSymbol" : "INFY20JUN950CE",
-        "exchange" : "NFO",
-        "symbol" : "74352_NFO",
-        "strikePrice" : "950.00",
-        "expiryDate" : "2020-06-25",
-        "instrument" : "OPTSTK",
-        "optionType" : "CE",
-        "underLyingSymbol" : "INFY",
-        "spotPrice" : "699.55",
-        "lastTradedPrice" : "0.00",
-        "openInterest" : "0",
-        "openInterestChange" : "0",
-        "volume" : "0"
-      } ]
-    }
+```json
+{
+  "serverTime" : "01/06/20 18:49:55",
+  "msgId" : "5e1e2e47-6565-457e-9d10-4e2b7d09d15b",
+  "status" : "Success",
+  "statusMessage" : "OptionChain details retrived successfully. ",
+  "optionChainDetails" : [ {
+    "tradingSymbol" : "INFY20JUN950CE",
+    "exchange" : "NFO",
+    "symbol" : "74352_NFO",
+    "strikePrice" : "950.00",
+    "expiryDate" : "2020-06-25",
+    "instrument" : "OPTSTK",
+    "optionType" : "CE",
+    "underLyingSymbol" : "INFY",
+    "spotPrice" : "699.55",
+    "lastTradedPrice" : "0.00",
+    "openInterest" : "0",
+    "openInterestChange" : "0",
+    "volume" : "0"
+  }]
+}
 
-###  <h3 id="limit">UserLimits:</h3>
+```
 
-   Gets the user cash balances, available margin for trading in equity and commodity segments.
+
+### <h3 id="futurechain">FutureChain:</h3>
+
+To search FutureChain for equity, derivatives and commodity scrips based on user provided search symbol and exchange name. 
       
 #### Parameters:
 
-    xSessionToken
+```text
+xSessionToken, searchSymbolName, exchange, expiryDate, strikePrice, optionType
+```    
+#### Sample FutureChain Request:
+
+```java
+
+FutureAPI futureApi = new FutureAPI();
+FutureChainResponse futureChainResponse = futureApi.getFutureContracts(xSessionToken, "ITC","NFO", "2024-06-27");
+
+```
+
+#### Sample FutureChain Response:
+```json
+
+{
+  "serverTime": "03/06/24 18:16:22",
+  "msgId": "8f9113de-bc27-4d14-be92-71426e024c32",
+  "status": "Success",
+  "statusMessage": "Future chain details retrived successfully. ",
+  "futureChainDetails": [
+    {
+      "tradingSymbol": "ITC24JUNFUT",
+      "exchange": "NFO",
+      "symbol": "52178_NFO",
+      "expiryDate": "2024-06-27",
+      "instrument": "FUTSTK",
+      "underLyingSymbol": "ITC",
+      "spotPrice": 430.35,
+      "lastTradedPrice": "426.75",
+      "openInterest": 107800000,
+      "openInterestInLot": 67375,
+      "openInterestChange": 1196800,
+      "openInterestChangeInLot": 748,
+      "oichangePer": "1.12",
+      "volume": 24145600,
+      "bestBids": [
+        {
+          "number": 1,
+          "quantity": "1600",
+          "price": "426.7000"
+        },
+        {
+          "number": 2,
+          "quantity": "1600",
+          "price": "426.5000"
+        },
+        {
+          "number": 3,
+          "quantity": "3200",
+          "price": "426.4500"
+        },
+        {
+          "number": 4,
+          "quantity": "17600",
+          "price": "426.4000"
+        },
+        {
+          "number": 5,
+          "quantity": "3200",
+          "price": "426.3500"
+        }
+      ],
+      "bestAsks": [
+        {
+          "number": 1,
+          "quantity": "1600",
+          "price": "426.7500"
+        },
+        {
+          "number": 2,
+          "quantity": "4800",
+          "price": "426.8000"
+        },
+        {
+          "number": 3,
+          "quantity": "4800",
+          "price": "426.8500"
+        },
+        {
+          "number": 4,
+          "quantity": "4800",
+          "price": "426.9000"
+        },
+        {
+          "number": 5,
+          "quantity": "17600",
+          "price": "426.9500"
+        }
+      ]
+    }
+  ]
+}
+
+```
+
+
+###  <h3 id="limit">UserLimits:</h3>
+
+Gets the user cash balances, available margin for trading in equity and commodity segments.
+      
+#### Parameters:
+
+```text
+
+xSessionToken
+
+```
     
 #### Sample UserLimit Request:
 
-    UserLimitsApi userLimitsApi = new UserLimitsApi();
-    LimitResponse limits = userLimitsApi.getLimits(xSessionToken);
+```java
+
+UserLimitsApi userLimitsApi = new UserLimitsApi();
+LimitResponse limits = userLimitsApi.getLimits(xSessionToken);
+  
+```
 
 #### Sample UserLimit Response:
 
-    {
-      "serverTime" : "29/05/20 15:34:05",
-      "msgId" : "7792c01b-618d-46b5-86d2-1a1c647c72d0",
-      "equityLimit" : {
-        "grossAvailableMargin" : "50000000000",
-        "payInToday" : "0",
-        "notionalCash" : "0",
-        "marginUsed" : "92",
-        "netAvailableMargin" : "49999999908"
-      },
-      "commodityLimit" : {
-        "grossAvailableMargin" : "0",
-        "payInToday" : "0",
-        "notionalCash" : "0",
-        "marginUsed" : "0",
-        "netAvailableMargin" : "0"
-      }
-    }
+```json
+{
+  "serverTime" : "29/05/20 15:34:05",
+  "msgId" : "7792c01b-618d-46b5-86d2-1a1c647c72d0",
+  "equityLimit" : {
+    "grossAvailableMargin" : "50000000000",
+    "payInToday" : "0",
+    "notionalCash" : "0",
+    "marginUsed" : "92",
+    "netAvailableMargin" : "49999999908"
+  },
+  "commodityLimit" : {
+    "grossAvailableMargin" : "0",
+    "payInToday" : "0",
+    "notionalCash" : "0",
+    "marginUsed" : "0",
+    "netAvailableMargin" : "0"
+  }
+}
+
+```
 
 ### <h3 id="placeorder">PlaceOrder:</h3>
 
-   To place an equity/derivative order with the exchange i.e the place order request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the PlaceOrder API returns an OrderNumber in response, and the actual order status can be checked separately using the OrderStatus API call .This is for Placing CNC, MIS and NRML Orders.
+To place an equity/derivative order with the exchange i.e the place order request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the PlaceOrder API returns an OrderNumber in response, and the actual order status can be checked separately using the OrderStatus API call .This is for Placing CNC, MIS and NRML Orders.
     
 #### Parameters:
 
-    xSessionToken, symbolName, exchange, transactionType, orderType, price, quantity, disclosedQuantity, orderValidity, productType, marketProtection, afterMarketOrderFlag
+```text
+
+xSessionToken, symbolName, exchange, transactionType, orderType, price, quantity, disclosedQuantity, orderValidity, productType, marketProtection, afterMarketOrderFlag
+
+```
     
 #### Sample PlaceOrder Request:
 
+```java
 
-    OrdersApi ordersApi = new OrdersApi();
-    OrderRequest orderRequest = new OrderRequest();
-    orderRequest.setSymbolName("RELIANCE");
-    orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
-    orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
-    orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
-    orderRequest.setQuantity("2");
-    orderRequest.setDisclosedQuantity("");
-    orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
-    orderRequest.setProductType(SamcoConstants.PRODUCT_MIS);
-    orderRequest.setAfterMarketOrderFlag("NO");		
-    OrderResponse placeOrder = ordersApi.placeOrder(xSessionToken, orderRequest);
-		     
+OrdersApi ordersApi = new OrdersApi();
+OrderRequest orderRequest = new OrderRequest();
+orderRequest.setSymbolName("RELIANCE");
+orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
+orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
+orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
+orderRequest.setQuantity("2");
+orderRequest.setDisclosedQuantity("");
+orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
+orderRequest.setProductType(SamcoConstants.PRODUCT_MIS);
+orderRequest.setAfterMarketOrderFlag("NO");		
+OrderResponse placeOrder = ordersApi.placeOrder(xSessionToken, orderRequest);
+	
+```
 #### Sample PlaceOrder Response:  
 
-    {
-      "serverTime" : "29/05/20 12:43:06",
-      "msgId" : "f1330206-cb2f-42eb-9925-b7d825c07bdd",
-      "orderNumber" : "200529000000059",
-      "status" : "Success",
-      "statusMessage" : "MIS Order request placed successfully",
-      "exchangeOrderStatus" : "PENDING",
-      "orderDetails" : {
-        "pendingQuantity" : "2",
-        "avgExecutionPrice" : "0.00",
-        "orderPlacedBy" : "--",
-        "tradingSymbol" : "RELIANCE",
-        "triggerPrice" : "0.00",
-        "exchange" : "BSE",
-        "totalQuantity" : "2",
-        "transactionType" : "BUY",
-        "productType" : "MIS",
-        "orderType" : "L",
-        "quantity" : "2",
-        "filledQuantity" : "0",
-        "orderPrice" : "1600.0",
-        "filledPrice" : "0.00",
-        "exchangeOrderNo" : "1590728958294000024",
-        "orderValidity" : "DAY",
-        "orderTime" : "29/05/2020 12:43:04"
-      }
-    }
+```json
 
+{
+  "serverTime" : "29/05/20 12:43:06",
+  "msgId" : "f1330206-cb2f-42eb-9925-b7d825c07bdd",
+  "orderNumber" : "200529000000059",
+  "status" : "Success",
+  "statusMessage" : "MIS Order request placed successfully",
+  "exchangeOrderStatus" : "PENDING",
+  "orderDetails" : {
+    "pendingQuantity" : "2",
+    "avgExecutionPrice" : "0.00",
+    "orderPlacedBy" : "--",
+    "tradingSymbol" : "RELIANCE",
+    "triggerPrice" : "0.00",
+    "exchange" : "BSE",
+    "totalQuantity" : "2",
+    "transactionType" : "BUY",
+    "productType" : "MIS",
+    "orderType" : "L",
+    "quantity" : "2",
+    "filledQuantity" : "0",
+    "orderPrice" : "1600.0",
+    "filledPrice" : "0.00",
+    "exchangeOrderNo" : "1590728958294000024",
+    "orderValidity" : "DAY",
+    "orderTime" : "29/05/2020 12:43:04"
+  }
+}
+```
 ### <h3 id="placeorderBO">PlaceOrderBO:</h3>
 
-   To place an equity/derivative BO order with the exchange i.e the place order BO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the placeOrderBO returns an orderNumber in response, and the actual order status can be checked separately using the orderStatus API call.
+To place an equity/derivative BO order with the exchange i.e the place order BO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the placeOrderBO returns an orderNumber in response, and the actual order status can be checked separately using the orderStatus API call.
         
 #### Parameters:
 
-    xSessionToken, exchange, symbolName, transactionType, orderType, quantity, disclosedQuantity, price, priceType, valueType, orderValidity, productType, squareOffValue, stopLossValue, trailingStopLoss
+```text
+
+xSessionToken, exchange, symbolName, transactionType, orderType, quantity, disclosedQuantity, price, priceType, valueType, orderValidity, productType, squareOffValue, stopLossValue, trailingStopLoss
+
+```
     
 #### Sample PlaceOrderBO Request:
 
-    OrdersApi ordersApi = new OrdersApi();
-    OrderRequestBO orderRequest = new OrderRequestBO();
-    orderRequest.setSymbolName("TCS");
-    orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
-    orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
-    orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
-    orderRequest.setQuantity("10");
-    orderRequest.setDisclosedQuantity("1");
-    orderRequest.setPrice("2000");
-    orderRequest.setPriceType("LTP");
-    orderRequest.setValueType("Absolute");
-    orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
-    orderRequest.setProductType(SamcoConstants.PRODUCT_BO);
-    orderRequest.setSquareOffValue("100");
-    orderRequest.setStopLossValue("50");
-    orderRequest.setTrailingStopLoss("30");
-    OrderResponseBO placeOrderBO = ordersApi.placeOrderBO(xSessionToken, orderRequest);
+```java
     
+OrdersApi ordersApi = new OrdersApi();
+OrderRequestBO orderRequest = new OrderRequestBO();
+orderRequest.setSymbolName("TCS");
+orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
+orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
+orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
+orderRequest.setQuantity("10");
+orderRequest.setDisclosedQuantity("1");
+orderRequest.setPrice("2000");
+orderRequest.setPriceType("LTP");
+orderRequest.setValueType("Absolute");
+orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
+orderRequest.setProductType(SamcoConstants.PRODUCT_BO);
+orderRequest.setSquareOffValue("100");
+orderRequest.setStopLossValue("50");
+orderRequest.setTrailingStopLoss("30");
+OrderResponseBO placeOrderBO = ordersApi.placeOrderBO(xSessionToken, orderRequest);
+
+```  
+
 #### Sample PlaceOrderBO Response:
+```json
 
-    {
-      "serverTime" : "01/06/20 14:58:38",
-      "msgId" : "de2d8caf-b76d-4a24-bb6c-fa654ed355bb",
-      "orderNumber" : "200601000000133",
-      "status" : "Success",
-      "statusMessage" : "Bracket Order request placed successfully",
-      "exchangeOrderStatus" : "EXECUTED",
-      "orderDetails" : {
-        "pendingQuantity" : "0",
-        "avgExecutionPrice" : "669.00",
-        "orderPlacedBy" : "--",
-        "tradingSymbol" : "INFY-EQ",
-        "triggerPrice" : "0.00",
-        "exchange" : "NSE",
-        "totalQuantity" : "10",
-        "transactionType" : "BUY",
-        "productType" : "BO",
-        "orderType" : "L",
-        "quantity" : "10",
-        "filledQuantity" : "10",
-        "orderPrice" : "669.0",
-        "filledPrice" : "669.00",
-        "exchangeOrderNo" : "1100000000030886",
-        "orderValidity" : "DAY",
-        "orderTime" : "01/06/2020 14:58:36"
-      }
-    }
-
+{
+  "serverTime" : "01/06/20 14:58:38",
+  "msgId" : "de2d8caf-b76d-4a24-bb6c-fa654ed355bb",
+  "orderNumber" : "200601000000133",
+  "status" : "Success",
+  "statusMessage" : "Bracket Order request placed successfully",
+  "exchangeOrderStatus" : "EXECUTED",
+  "orderDetails" : {
+    "pendingQuantity" : "0",
+    "avgExecutionPrice" : "669.00",
+    "orderPlacedBy" : "--",
+    "tradingSymbol" : "INFY-EQ",
+    "triggerPrice" : "0.00",
+    "exchange" : "NSE",
+    "totalQuantity" : "10",
+    "transactionType" : "BUY",
+    "productType" : "BO",
+    "orderType" : "L",
+    "quantity" : "10",
+    "filledQuantity" : "10",
+    "orderPrice" : "669.0",
+    "filledPrice" : "669.00",
+    "exchangeOrderNo" : "1100000000030886",
+    "orderValidity" : "DAY",
+    "orderTime" : "01/06/2020 14:58:36"
+  }
+}
+```
 ### <h3 id="placeorderCO">PlaceOrderCO:</h3>
 
-   To place an equity/derivative CO order with the exchange i.e the place order CO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the placeOrderCO returns an orderNumber in response, and in scenarios as above the actual order status can be checked separately using the orderStatus API call.
+To place an equity/derivative CO order with the exchange i.e the place order CO request typically registers the order with OMS and when it happens successfully, a success response is returned. Successful placement of an order via the API does not imply its successful execution. So when an order is successfully placed the placeOrderCO returns an orderNumber in response, and in scenarios as above the actual order status can be checked separately using the orderStatus API call.
         
 #### Parameters:
 
@@ -745,22 +1092,407 @@ Using the order identifier, the user would be able to modify the order attribute
       "statusMessage" : "Bracket Order exited successfully"
     }
 
+
+
+
+
+
+
+
+
+
+
+### <h3 id="addGtt">AddGTT:</h3>
+
+GTT (Good Till Triggered) is a feature that allows users to place buy or sell orders of any stock at market or limit price. These orders are executed (triggered) once the market price of the stock reaches your desired price i.e the price you mentioned in the GTT Order. <a href="https://www.samco.in/gtt-order">Read More....</a>
+    
+#### Parameters:
+
+```text
+
+xSessionToken,symbolName,transactionType,quantity,productType,orderType,triggerPrice,limitPrice,marketProtection
+
+```
+    
+#### Sample Add GTT Request:
+
+```java
+
+GTTApi createGtt= new GTTApi();
+GTTCreateRequest gttRequest = new GTTCreateRequest();
+gttRequest.setExchange(SamcoConstants.EXCHANGE_NSE);
+gttRequest.setSymbolName("IDEA");
+gttRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
+gttRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
+gttRequest.setQuantity("10");
+gttRequest.setProductType(SamcoConstants.PRODUCT_NRML);
+gttRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
+gttRequest.setTriggerPrice("14");
+gttRequest.setLimitPrice("14.50");
+gttRequest.setMarketProtection("3");
+GTTCreateResponse createGttresponse = createGtt.postGTTRequest(xSessionToken, gttRequest);
+		     
+```
+#### Sample Add GTT Response:  
+```json
+{
+  "serverTime": "31/05/24 15:21:50",
+  "msgId": "06fb18e6-6790-4700-8f26-258f1e31fd76",
+  "status": "Success",
+  "statusMessage": "GTT CREATED",
+  "gttSummaryId": "944090",
+  "orderDetails": {
+    "productType": "NRML",
+    "orderType": "L",
+    "triggerPrice": "14",
+    "marketProtection": "",
+    "transactionType": "BUY",
+    "triggerId": "1344160",
+    "symbol": "14366_NSE",
+    "symbolName": "IDEA",
+    "createdAt": "2024-05-31 15:21:50"
+  }
+}
+```
+
+### <h3 id="modifyGtt">ModifyGTT:</h3>
+
+Modifying a GTT (Good Till Triggered) order allows investors to adjust the parameters of their existing GTT orders. This can include changing the trigger price, altering the quantity of the order, productType, limitPrice, marketProtection or modifying the order type. 
+    
+#### Parameters:
+
+```text
+
+xSessionToken,exchange,symbolName,transactionType,quantity,productType,orderType,triggerPrice,limitPrice,marketProtection,gttSummaryId
+
+```
+    
+#### Sample Modify GTT Request:
+
+```java
+
+GTTApi modifyGtt = new GTTApi();
+GTTModifyRequest modifyGttRequest = new GTTModifyRequest();
+modifyGttRequest.setExchange(SamcoConstants.EXCHANGE_NSE);
+modifyGttRequest.setSymbolName("IDEA");
+modifyGttRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
+modifyGttRequest.setQuantity("5");
+modifyGttRequest.setProductType(SamcoConstants.PRODUCT_NRML);
+modifyGttRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
+modifyGttRequest.setTriggerPrice("14.8");
+modifyGttRequest.setLimitPrice("14.8");
+modifyGttRequest.setMarketProtection("3");
+modifyGttRequest.setGttSummaryId(944090);
+GTTModifyResponse modifyresponse = modifyGtt.putGTTRequest(xSessionToken, modifyGttRequest);
+
+```	     
+#### Sample Modify GTT Response:  
+
+```json
+{
+  "serverTime": "31/05/24 15:23:29",
+  "msgId": "26eba130-ce8c-4c4e-b661-a1c90292bf11",
+  "status": "Success",
+  "statusMessage": "GTT MODIFIED",
+  "gttSummaryId": "944115",
+  "orderDetails": {
+    "productType": "NRML",
+    "orderType": "L",
+    "triggerPrice": "14.8",
+    "marketProtection": "",
+    "transactionType": "BUY",
+    "limitPrice": "14.8",
+    "symbol": "14366_NSE",
+    "symbolName": "IDEA",
+    "quantity": "5"
+  }
+}
+```
+
+### <h3 id="deleteGtt">DeleteGTT:</h3>
+
+Deleting a GTT order cancels it before execution, removing it from the exchange's order book and preventing future execution. Once GTT is triggered, deletion is not possible.
+    
+#### Parameters:
+
+```text
+
+xSessionToken,gttSummaryId
+
+```
+    
+#### Sample Delete GTT Request:
+
+```java
+
+GTTApi deleteGtt = new GTTApi();
+GTTDeleteRequest requestBody = new GTTDeleteRequest(944115);
+GTTDeleteResponse gttdeleteresponse = deleteGtt.deleteGTTRequest(xSessionToken, requestBody);
+		 
+```
+
+#### Sample Delete GTT Response: 
+
+```json
+{
+  "serverTime": "31/05/24 15:25:07",
+  "msgId": "f8d8d409-affa-4251-9756-923c09e21294",
+  "status": "Success",
+  "statusMessage": "GTT Deleted successfully",
+  "gttSummaryId": "944115",
+  "orderDetails": {
+    "userId": "RXX12XX"
+  }
+}
+```
+
+### <h3 id="addOco">AddOCO:</h3>
+
+GTT (Good Till Triggered) is a feature that allows users to place buy or sell orders of any stock at market or limit price. These orders are executed (triggered) once the market price of the stock reaches your desired price i.e the price you mentioned in the GTT Order. <a href="https://www.samco.in/gtt-order">Read More....</a>
+    
+#### Parameters:
+
+```text
+
+xSessionToken,symbolName,transactionType,quantity,productType,orderType,targetTriggerPrice,targetLimitPrice,stoplossTriggerPrice,stoplossLimitPrice,marketProtection
+```
+    
+#### Sample Add OCO Request:
+
+```java
+
+GTTOCOApi gttOcoApi = new GTTOCOApi();
+GTTOCOCreateRequest gttocoReq = new GTTOCOCreateRequest();
+gttocoReq.setExchange("NSE");
+gttocoReq.setSymbolName("IDEA");
+gttocoReq.setTransactionType("SELL");
+gttocoReq.setQuantity("1");
+gttocoReq.setProductType("CNC");
+gttocoReq.setOrderType("L");
+gttocoReq.setTargetTriggerPrice("17");
+gttocoReq.setTargetLimitPrice("16");
+gttocoReq.setStoplossTriggerPrice("13");
+gttocoReq.setStoplossLimitPrice("12");
+gttocoReq.setMarketProtection("");
+        
+GTTOCOCreateResponse gttocoResponse = gttOcoApi.postGTTOCORequest(xSessionToken, gttocoReq);
+  
+```
+		     
+#### Sample Add OCO Response:  
+
+```json
+{
+    "serverTime": "31/05/24 17:35:52",
+    "msgId": "eda2be26-8f8e-4319-9afc-2d256fafd2bb",
+    "status": "Success",
+    "statusMessage": "GTT CREATED",
+    "gttSummaryId": "944425",
+    "orderDetails": {
+        "transactionType": "SELL",
+        "symbol": "14366_NSE",
+        "symbolName": "IDEA",
+        "productType": "CNC",
+        "orderType": "L",
+        "target": {
+            "quantity": "1",
+            "triggerPrice": "17",
+            "limitPrice": "16",
+            "marketProtection": "",
+            "type": "TARGET",
+            "triggerId": "1344615"
+        },
+        "stopLoss": {
+            "quantity": "1",
+            "triggerPrice": "13",
+            "limitPrice": "12",
+            "marketProtection": "",
+            "type": "STOPLOSS",
+            "triggerId": "1344620"
+        }
+    }
+}
+
+```
+
+
+
+
+### <h3 id="modifyOco">ModifyOCO:</h3>
+
+Modifying a GTT (Good Till Triggered) order allows investors to adjust the parameters of their existing GTT orders. This can include changing the trigger price, altering the quantity of the order, productType, limitPrice, marketProtection or modifying the order type. 
+    
+#### Parameters:
+
+```text
+
+xSessionToken,exchange,symbolName,transactionType,quantity,productType,orderType,targetTriggerPrice,targetLimitPrice,stoplossTriggerPrice,stoplossLimitPrice,marketProtection,gttSummaryId
+
+```
+    
+#### Sample Modify OCO Request:
+
+```java
+
+GTTOCOApi gttOcoApi = new GTTOCOApi();
+GTTOCOModifyRequest gttModReq=new GTTOCOModifyRequest();
+gttModReq.setExchange("NSE");
+gttModReq.setSymbolName("IDEA");
+gttModReq.setTransactionType("SELL");
+gttModReq.setQuantity("2");
+gttModReq.setProductType("NRML");
+gttModReq.setOrderType("L");
+gttModReq.setTargetTriggerPrice("18");
+gttModReq.setTargetLimitPrice("17");
+gttModReq.setStoplossTriggerPrice("14");
+gttModReq.setStoplossLimitPrice("13");
+gttModReq.setMarketProtection("");
+gttModReq.setGttSummaryId("944425");
+GTTOCOModifyResponse gttModifyResponse = gttOcoApi.putGTTOCORequest(xSessionToken,gttModReq);
+
+```
+		     
+#### Sample Modify OCO Response:  
+
+```json
+{
+    "serverTime": "31/05/24 17:43:23",
+    "msgId": "2589a516-d3cd-4408-863c-99d5ba6de971",
+    "status": "Success",
+    "statusMessage": "GTT MODIFIED",
+    "gttSummaryId": "944430",
+    "orderDetails": {
+        "transactionType": "SELL",
+        "orderType": "L",
+        "symbol": "14366_NSE",
+        "symbolName": "IDEA",
+        "productType": "NRML",
+        "target": {
+            "limitPrice": "17",
+            "triggerId": "1344625",
+            "triggerPrice": "18",
+            "type": "TARGET",
+            "quantity": "2",
+            "marketProtection": ""
+        },
+        "stopLoss": {
+            "limitPrice": "13",
+            "triggerId": "1344630",
+            "triggerPrice": "14",
+            "type": "STOPLOSS",
+            "quantity": "2",
+            "marketProtection": ""
+        }
+    }
+}
+
+```
+
+### <h3 id="deleteOco">DeleteOCO:</h3>
+
+Deleting an OCO (One-Cancels-the-Other) order involves canceling both legs of the order simultaneously. In an OCO order, when one part of the order is executed, the other part is automatically canceled. However, if the investor decides to delete the entire OCO order before either part is executed, they can do so using the delete OCO API.
+
+    
+#### Parameters:
+
+```text
+
+xSessionToken,gttSummaryId
+    
+```
+#### Sample Delete GTT Request:
+
+```java
+
+GTTOCOApi delGttOco = new GTTOCOApi();
+GTTOCODeleteRequest requestBody = new GTTOCODeleteRequest(944430);
+GTTOCODeleteResponse gttdeleteresponse = delGttOco.deleteGTTOCORequest(xSessionToken, requestBody);
+
+```
+		     
+#### Sample Delete OCO Response:  
+```json
+{
+    "serverTime": "31/05/24 19:05:44",
+    "msgId": "ddeb9d0e-aff8-4e50-8e8f-6d2189056dfd",
+    "status": "Success",
+    "statusMessage": "GTT Deleted successfully",
+    "gttSummaryId": "944430",
+    "orderDetails": {
+        "clientId": "RX31XXX"
+    }
+}
+```
+
+### <h3 id="listGttOco">ListGttOco:</h3>
+
+Using the list OCO, we can retrieve the list of active GTT OCO, triggered GTT OCO, and expired GTT OCO.
+    
+#### Parameters:
+
+```text
+
+xSessionToken,listType
+
+```
+#### Sample Delete GTT Request:
+
+```java
+
+GTTApi listgtt = new GTTApi();
+GTTOrderListResponse gttListResponse = listgtt.getGTTListRequest(xSessionToken);
+
+```
+		     
+#### Sample Delete OCO Response:  
+```json
+{
+  "serverTime": "31/05/24 15:24:23",
+  "msgId": "b9637ccf-579a-4cd7-ac7b-4fa8ba11ee6e",
+  "status": "Success",
+  "statusMessage": "List of GTT / OCO orders received.",
+  "orderDetails": [
+    {
+      "summary": {
+        "id": 944115,
+        "userId": "RXX12XX",
+        "symbol": "14366_NSE",
+        "symbolName": "IDEA",
+        "orderType": "L",
+        "productType": "NRML",
+        "gttType": "SINGLE",
+        "validTill": "FOREVER",
+        "createdAt": "2024-05-31 15:23:30",
+        "deletedAt": "",
+        "gttSummaryId": "944115",
+        "isExpired": false
+      },
+      "triggers": {}
+    }
+  ]
+}
+```
+
 ### <h3 id="tradebook">TradeBook:</h3>
 
-   Details of all successfully executed orders placed by the user.
+Details of all successfully executed orders placed by the user.
        
 #### Parameters:
 
-    xSessionToken
+```text
+xSessionToken
+```
     
 #### Sample TradeBook Request:
 
-    TradeBookApi tradeBookApi = new TradeBookApi();
-    TradeBookResponse tradeBook = tradeBookApi.getTradeBook(xSessionToken);
+```java
+TradeBookApi tradeBookApi = new TradeBookApi();
+TradeBookResponse tradeBook = tradeBookApi.getTradeBook(xSessionToken);
+```
     
 #### Sample TradeBook Response:
- 
-    {
+ ```json
+{
       "serverTime" : "29/05/20 15:43:49",
       "msgId" : "d2b6770c-348b-4bd0-91fa-feb5b3d10d8d",
       "status" : "Success",
@@ -797,15 +1529,15 @@ Using the order identifier, the user would be able to modify the order attribute
         "optionType" : "XX",
         "orderPlaceBy" : "--"
        } ]
-    }
-
+}
+```
 ### <h3 id="positions">Positions:</h3>
 
-   Get position details of the user (The details of equity, derivative, commodity, currency borrowed or owned by the user).
+Get position details of the user (The details of equity, derivative, commodity, currency borrowed or owned by the user).
         
 #### Parameters:
 
-    xSessionToken, positionType
+xSessionToken, positionType
     
 #### Sample Positions Request:
 
