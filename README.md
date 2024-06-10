@@ -18,7 +18,7 @@
     
    * With StockNote API being a REST based interface and it uses JSON request and response messages, Java SDK provides request and response objects as native Java beans (after appropriate serialisation / de-serialisation)
 
-   * For specific details on parameters passed on the request, and details about API response, please refer our [Stocknote API documentation](https://docs-tradeapi.samco.in/#samco-api-documentation).  
+   * For specific details on parameters passed on the request, and details about API response, please refer our [Trade API documentation](https://docs-tradeapi.samco.in/#samco-api-documentation).  
  
 ### Note
 
