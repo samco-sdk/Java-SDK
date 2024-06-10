@@ -2,7 +2,7 @@
 
    Official Java Bridge for accessing Stocknote API
    
-   This documentation covers details of the Java bridge / SDK provided by SAMCO, for accessing the <a href="https://docs-tradeapi.samco.in/#samco-api-documentation">SAMCO Stocknote APIs.</a>
+   This documentation covers details of the Java bridge / SDK provided by SAMCO, for accessing the <a href="https://docs-tradeapi.samco.in/#samco-api-documentation">SAMCO Trade API.</a>
 
 ## Overview
 
@@ -12,7 +12,7 @@
    
    * Include the JAR file in your build path and access the trade APIs using the inbuilt classes in Java SDK
    
-   * Different Java classes and methods are exposed in the SDK for handling different Stocknote APIs
+   * Different Java classes and methods are exposed in the SDK for handling different Trade API
    
    * As an initial step, users need to use the Login method for connecting to APIs and in the Java response bean object you will get user session identifier. Using the session identifier, users can access other API’s
     
