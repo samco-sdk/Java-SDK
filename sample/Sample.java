@@ -1,60 +1,74 @@
 package in.samco;
 
-import io.samco.client.ApiException;
-import io.samco.client.SamcoConstants;
-import io.samco.client.api.OrdersApi;
-import io.samco.client.api.QuoteApi;
-import io.samco.client.api.UserLoginApi;
-import io.samco.client.model.LoginRequest;
-import io.samco.client.model.LoginResponse;
-import io.samco.client.model.MarketDepthResponse;
-import io.samco.client.model.OrderRequest;
-import io.samco.client.model.OrderResponse;
+import in.samco.api.AccessTokenApi;
+import in.samco.api.OrdersApi;
+import in.samco.api.QuoteApi;
+import in.samco.api.UserLoginApi;
+import in.samco.model.AccessTokenRequest;
+import in.samco.model.AccessTokenResponse;
+import in.samco.model.LoginRequest;
+import in.samco.model.LoginResponse;
+import in.samco.model.MarketDepthResponse;
+import in.samco.model.OrderRequest;
+import in.samco.model.OrderResponse;
+import in.samco.util.SamcoConstants;
 
 public class Sample {
 
-	public static void main(String[] args) {
+    public static void main(String[] args) {
 
-		try {
+        try {
 
-			UserLoginApi userLoginApi = new UserLoginApi();
-			LoginRequest loginRequest = new LoginRequest();
-			loginRequest.setUserId("user_id");
-			loginRequest.setPassword("password");
-			loginRequest.setYob("yob");
-			LoginResponse loginResponse = userLoginApi.login(loginRequest);
-			String session = loginResponse.getSessionToken();
-			System.out.println("session : " + loginResponse.getSessionToken());
+            AccessTokenApi accessTokenApi = new AccessTokenApi();
+            AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
+            accessTokenRequest.setUid("user_id");
+            accessTokenRequest.setSecretApiKey("api_key_secret");
 
-			if (session != null && !"".equalsIgnoreCase(session)) {
+            AccessTokenResponse accessTokenResponse = accessTokenApi.accessToken(accessTokenRequest);
+            System.out.println("Access token response : " + accessTokenResponse);
 
-				QuoteApi quoteApi = new QuoteApi();
-				MarketDepthResponse quote = quoteApi.getQuote(loginResponse.getSessionToken(), "SBIN",
-						SamcoConstants.EXCHANGE_NSE);
+            String accessToken = accessTokenResponse.getAccessToken();
 
-				if ("Success".equalsIgnoreCase(quote.getStatus())) {
+            UserLoginApi userLoginApi = new UserLoginApi();
+            LoginRequest loginRequest = new LoginRequest();
+            loginRequest.setUserId("user_id");
+            loginRequest.setPassword("password");
+            loginRequest.setAccessToken(accessToken);
+            loginRequest.setYob("yob");
+            LoginResponse loginResponse = userLoginApi.login(loginRequest);
+            System.out.println("Login Response : " + loginResponse);
 
-					OrdersApi ordersApi = new OrdersApi();
-					OrderRequest orderRequest = new OrderRequest();
-					orderRequest.setSymbolName("RELIANCE");
-					orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
-					orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
-					orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
-					orderRequest.setQuantity("2");
-					orderRequest.setDisclosedQuantity("");
-					orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
-					orderRequest.setProductType(SamcoConstants.PRODUCT_MIS);
-					orderRequest.setAfterMarketOrderFlag("NO");
-					OrderResponse placeOrder = ordersApi.placeOrder(loginResponse.getSessionToken(), orderRequest);
-					System.out.println("place order success response : " + placeOrder);
+            String session = loginResponse.getSessionToken();
+            System.out.println("session : " + session);
 
-				}
-			}
+            if (session != null && !"".equalsIgnoreCase(session)) {
 
-		} catch (ApiException ex) {
-			System.out.println("Exception caught while fetching trade api : " + ex.getResponseBody());
-		}
+                QuoteApi quoteApi = new QuoteApi();
+                MarketDepthResponse quote = quoteApi.getQuote(loginResponse.getSessionToken(), "SBIN",
+                        SamcoConstants.EXCHANGE_NSE);
 
-	}
+                if ("Success".equalsIgnoreCase(quote.getStatus())) {
+
+                    OrdersApi ordersApi = new OrdersApi();
+                    OrderRequest orderRequest = new OrderRequest();
+                    orderRequest.setSymbolName("RELIANCE");
+                    orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
+                    orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
+                    orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
+                    orderRequest.setQuantity("2");
+                    orderRequest.setDisclosedQuantity("");
+                    orderRequest.setPrice("1369");
+                    orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
+                    orderRequest.setProductType(SamcoConstants.PRODUCT_MIS);
+                    orderRequest.setAfterMarketOrderFlag("NO");
+                    OrderResponse placeOrder = ordersApi.placeOrder(loginResponse.getSessionToken(), orderRequest);
+                    System.out.println("place order success response : " + placeOrder);
+                }
+            }
+
+        } catch (Exception ex) {
+            System.out.println("Exception caught while fetching trade api : " + ex.getMessage());
+        }
+
+    }
 }
-

@@ -141,7 +141,6 @@
     ],
     "orderTypeList": [
         "L",
-        "MKT",
         "SL"
     ],
     "productList": [
@@ -665,7 +664,7 @@ To place an equity/derivative order with the exchange i.e the place order reques
 
 ```text
 
-xSessionToken, symbolName, exchange, transactionType, orderType, price, quantity, disclosedQuantity, orderValidity, productType, marketProtection, afterMarketOrderFlag
+xSessionToken, symbolName, exchange, transactionType, orderType, price, quantity, disclosedQuantity, orderValidity, productType, afterMarketOrderFlag
 
 ```
     
@@ -678,9 +677,10 @@ OrderRequest orderRequest = new OrderRequest();
 orderRequest.setSymbolName("RELIANCE");
 orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
 orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
-orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
+orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
 orderRequest.setQuantity("2");
 orderRequest.setDisclosedQuantity("");
+orderRequest.setPrice("1369");
 orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
 orderRequest.setProductType(SamcoConstants.PRODUCT_MIS);
 orderRequest.setAfterMarketOrderFlag("NO");		
@@ -740,7 +740,7 @@ OrderRequestBO orderRequest = new OrderRequestBO();
 orderRequest.setSymbolName("TCS");
 orderRequest.setExchange(SamcoConstants.EXCHANGE_BSE);
 orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
-orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
+orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
 orderRequest.setQuantity("10");
 orderRequest.setDisclosedQuantity("1");
 orderRequest.setPrice("2000");
@@ -792,7 +792,7 @@ To place an equity/derivative CO order with the exchange i.e the place order CO 
         
 #### Parameters:
 
-    xSessionToken, symbolName, exchange, transactionType, orderType, price, quantity, disclosedQuantity, orderValidity, productType, marketProtection, triggerPrice
+    xSessionToken, symbolName, exchange, transactionType, orderType, price, quantity, disclosedQuantity, orderValidity, productType, triggerPrice
     
 #### Sample PlaceOrderCO Request:
 
@@ -801,8 +801,9 @@ To place an equity/derivative CO order with the exchange i.e the place order CO 
     orderRequest.setSymbolName("RELIANCE");
     orderRequest.setExchange(SamcoConstants.EXCHANGE_NSE);
     orderRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
-    orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
+    orderRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
     orderRequest.setQuantity("15");
+    orderRequest.setPrice("2000");
     orderRequest.setDisclosedQuantity("");
     orderRequest.setOrderValidity(SamcoConstants.VALIDITY_DAY);
     orderRequest.setProductType(SamcoConstants.PRODUCT_CO);
@@ -846,7 +847,7 @@ To place an equity/derivative CO order with the exchange i.e the place order CO 
         
 #### Parameters:
 
-    xSessionToken, orderNumber, orderType, quantity, disclosedQuantity, orderValidity, price, triggerPrice, parentOrderId, marketProtection
+    xSessionToken, orderNumber, orderType, quantity, disclosedQuantity, orderValidity, price, triggerPrice, parentOrderId
     
 #### Sample ModifyOrder Request:
 
@@ -1110,7 +1111,7 @@ GTT (Good Till Triggered) is a feature that allows users to place buy or sell or
 
 ```text
 
-xSessionToken,symbolName,transactionType,quantity,productType,orderType,triggerPrice,limitPrice,marketProtection
+xSessionToken,symbolName,transactionType,quantity,productType,orderType,triggerPrice,limitPrice
 
 ```
     
@@ -1126,10 +1127,8 @@ gttRequest.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
 gttRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
 gttRequest.setQuantity("10");
 gttRequest.setProductType(SamcoConstants.PRODUCT_NRML);
-gttRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
 gttRequest.setTriggerPrice("14");
 gttRequest.setLimitPrice("14.50");
-gttRequest.setMarketProtection("3");
 GTTCreateResponse createGttresponse = createGtt.postGTTRequest(xSessionToken, gttRequest);
 		     
 ```
@@ -1145,7 +1144,6 @@ GTTCreateResponse createGttresponse = createGtt.postGTTRequest(xSessionToken, gt
     "productType": "NRML",
     "orderType": "L",
     "triggerPrice": "14",
-    "marketProtection": "",
     "transactionType": "BUY",
     "triggerId": "1344160",
     "symbol": "14366_NSE",
@@ -1157,13 +1155,13 @@ GTTCreateResponse createGttresponse = createGtt.postGTTRequest(xSessionToken, gt
 
 ### <h3 id="modifyGtt">ModifyGTT:</h3>
 
-Modifying a GTT (Good Till Triggered) order allows investors to adjust the parameters of their existing GTT orders. This can include changing the trigger price, altering the quantity of the order, productType, limitPrice, marketProtection or modifying the order type. 
+Modifying a GTT (Good Till Triggered) order allows investors to adjust the parameters of their existing GTT orders. This can include changing the trigger price, altering the quantity of the order, productType, limitPrice or modifying the order type. 
     
 #### Parameters:
 
 ```text
 
-xSessionToken,exchange,symbolName,transactionType,quantity,productType,orderType,triggerPrice,limitPrice,marketProtection,gttSummaryId
+xSessionToken,exchange,symbolName,transactionType,quantity,productType,orderType,triggerPrice,limitPrice,gttSummaryId
 
 ```
     
@@ -1181,7 +1179,6 @@ modifyGttRequest.setProductType(SamcoConstants.PRODUCT_NRML);
 modifyGttRequest.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
 modifyGttRequest.setTriggerPrice("14.8");
 modifyGttRequest.setLimitPrice("14.8");
-modifyGttRequest.setMarketProtection("3");
 modifyGttRequest.setGttSummaryId(944090);
 GTTModifyResponse modifyresponse = modifyGtt.putGTTRequest(xSessionToken, modifyGttRequest);
 
@@ -1199,7 +1196,6 @@ GTTModifyResponse modifyresponse = modifyGtt.putGTTRequest(xSessionToken, modify
     "productType": "NRML",
     "orderType": "L",
     "triggerPrice": "14.8",
-    "marketProtection": "",
     "transactionType": "BUY",
     "limitPrice": "14.8",
     "symbol": "14366_NSE",
@@ -1254,7 +1250,7 @@ GTT (Good Till Triggered) is a feature that allows users to place buy or sell or
 
 ```text
 
-xSessionToken,symbolName,transactionType,quantity,productType,orderType,targetTriggerPrice,targetLimitPrice,stoplossTriggerPrice,stoplossLimitPrice,marketProtection
+xSessionToken,symbolName,transactionType,quantity,productType,orderType,targetTriggerPrice,targetLimitPrice,stoplossTriggerPrice,stoplossLimitPrice
 ```
     
 #### Sample Add OCO Request:
@@ -1273,7 +1269,6 @@ gttocoReq.setTargetTriggerPrice("17");
 gttocoReq.setTargetLimitPrice("16");
 gttocoReq.setStoplossTriggerPrice("13");
 gttocoReq.setStoplossLimitPrice("12");
-gttocoReq.setMarketProtection("");
         
 GTTOCOCreateResponse gttocoResponse = gttOcoApi.postGTTOCORequest(xSessionToken, gttocoReq);
   
@@ -1298,7 +1293,6 @@ GTTOCOCreateResponse gttocoResponse = gttOcoApi.postGTTOCORequest(xSessionToken,
             "quantity": "1",
             "triggerPrice": "17",
             "limitPrice": "16",
-            "marketProtection": "",
             "type": "TARGET",
             "triggerId": "1344615"
         },
@@ -1306,7 +1300,6 @@ GTTOCOCreateResponse gttocoResponse = gttOcoApi.postGTTOCORequest(xSessionToken,
             "quantity": "1",
             "triggerPrice": "13",
             "limitPrice": "12",
-            "marketProtection": "",
             "type": "STOPLOSS",
             "triggerId": "1344620"
         }
@@ -1320,13 +1313,13 @@ GTTOCOCreateResponse gttocoResponse = gttOcoApi.postGTTOCORequest(xSessionToken,
 
 ### <h3 id="modifyOco">ModifyOCO:</h3>
 
-Modifying a GTT (Good Till Triggered) order allows investors to adjust the parameters of their existing GTT orders. This can include changing the trigger price, altering the quantity of the order, productType, limitPrice, marketProtection or modifying the order type. 
+Modifying a GTT (Good Till Triggered) order allows investors to adjust the parameters of their existing GTT orders. This can include changing the trigger price, altering the quantity of the order, productType, limitPrice or modifying the order type. 
     
 #### Parameters:
 
 ```text
 
-xSessionToken,exchange,symbolName,transactionType,quantity,productType,orderType,targetTriggerPrice,targetLimitPrice,stoplossTriggerPrice,stoplossLimitPrice,marketProtection,gttSummaryId
+xSessionToken,exchange,symbolName,transactionType,quantity,productType,orderType,targetTriggerPrice,targetLimitPrice,stoplossTriggerPrice,stoplossLimitPrice,gttSummaryId
 
 ```
     
@@ -1346,7 +1339,6 @@ gttModReq.setTargetTriggerPrice("18");
 gttModReq.setTargetLimitPrice("17");
 gttModReq.setStoplossTriggerPrice("14");
 gttModReq.setStoplossLimitPrice("13");
-gttModReq.setMarketProtection("");
 gttModReq.setGttSummaryId("944425");
 GTTOCOModifyResponse gttModifyResponse = gttOcoApi.putGTTOCORequest(xSessionToken,gttModReq);
 
@@ -1373,7 +1365,6 @@ GTTOCOModifyResponse gttModifyResponse = gttOcoApi.putGTTOCORequest(xSessionToke
             "triggerPrice": "18",
             "type": "TARGET",
             "quantity": "2",
-            "marketProtection": ""
         },
         "stopLoss": {
             "limitPrice": "13",
@@ -1381,7 +1372,6 @@ GTTOCOModifyResponse gttModifyResponse = gttOcoApi.putGTTOCORequest(xSessionToke
             "triggerPrice": "14",
             "type": "STOPLOSS",
             "quantity": "2",
-            "marketProtection": ""
         }
     }
 }
@@ -1939,12 +1929,10 @@ xSessionToken, positionType
  
 ### Order types:
 
-    ORDER_TYPE_MARKET
     ORDER_TYPE_LIMIT 
-    ORDER_TYPE_SLM 
     ORDER_TYPE_SL 
     
-     Example:- setOrderType(SamcoConstants.ORDER_TYPE_MARKET);
+     Example:- setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
 
 ### Validity types:
 
