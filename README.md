@@ -26,13 +26,13 @@
    
 ### Prerequisites 
 
-* Java 7 and above
+* Java 1.8 and above
 
 ### Steps
 
 1. Get StockNote Java Bridge Jar from the below link
 
-    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/stocknote-bridge-java-3.0.0.jar
+    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/samco-bridge-java-3.1.0.jar
 
 2. Setup Jar File
 
@@ -40,14 +40,14 @@
 
     * Install jar file into your local .m2 repository using the below command :
     
-      mvn install:install-file -Dfile="[path to jar]/java_sdk.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=io.samco -DartifactId=stocknote-bridge-java -Dversion=3.0.0 -Dpackaging=jar
+      mvn install:install-file -Dfile="[path to jar]/java_sdk.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=io.samco -DartifactId=samco-bridge-java -Dversion=3.1.0 -Dpackaging=jar
 	
     * Add the below dependency into pom.xml file .
 	
 	            <dependency>
 		           <groupId>io.samco</groupId>
-		           <artifactId>stocknote-bridge-java</artifactId>
-		           <version>3.0.0</version>
+		           <artifactId>samco-bridge-java</artifactId>
+		           <version>3.1.0</version>
 	           </dependency>
 
      * For gradle user use the same maven command for install jar into local repository
@@ -58,18 +58,23 @@
 				      }
 		    
 		    dependencies {
-   			                implementation 'io.samco:stocknote-bridge-java:3.0.0'
+   			                implementation 'io.samco:samco-bridge-java:3.1.0'
 			             }
 
      * Adding jar to build path in eclipse based IDE's 
      
-        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include stocknote-bridge-java-3.0.0.jar 
+        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include samco-bridge-java-3.1.0.jar 
             
 			   
 			   
 ###  List of supported API
 
  *  <a href="#login">Login</a>
+ *  <a href="#generateotp">GenerateOtp</a>
+ *  <a href="#generatesecretapikey">GenerateSecretAPIKey</a>
+ *  <a href="#generateaccesstoken">GenerateAccessToken</a>
+ *  <a href="#ipregistration">IpRegistration</a>
+ *  <a href="#ipupdate">IPUpdate</a>
  *  <a href="#personalindex">PersonalIndex</a>
  *  <a href="#equity_search">SearchEquityDerivative</a>
  *  <a href="#quote">Quote</a>
