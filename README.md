@@ -119,7 +119,7 @@
 
 #### Parameters:
 
-    userId, password, yob
+    userId, password, yob, accessToken
     
 #### Login Sample Request:
 
@@ -128,6 +128,7 @@
     loginRequest.setUserId(userId);
     loginRequest.setPassword(password);
     loginRequest.setYob(yob);
+    loginRequest.setAccessToken(accessToken);
     LoginResponse loginResponse = userLoginApi.login(loginRequest);
  
 #### Sample Login Response:
@@ -157,10 +158,145 @@
     
 #### Using the session token users can call other API’s through java SDK
 
+### <h3 id="generateotp">GenerateOtp:</h3>
 
+The Generate OTP API is used to start the process of getting a secret API key.When this API is called, a One-Time Password (OTP) is sent to the user’s registered mobile number and email ID. This OTP is required for the next step of API key generation.
 
+    
+#### Sample Generate Otp Request:
+```java
+GenerateOtpApi otpApi = new GenerateOtpApi();
+GenerateOtpRequest otpRequest = new GenerateOtpRequest();
+otpRequest.setUid("XX1234");
+GenerateOtpResponse otpResponse = otpApi.generateOTP(otpRequest);
 
+```
+#### Sample Generate Otp Response:
+```json
+{
+    "serverTime": "17/12/25 09:40:58",
+    "msgId": "1e439d95-5e57-4810-b57e-df94e74776ea",
+    "status": "Success",
+    "statusMessage": "OTP sent to your mobile and email."
+}
+```
 
+### <h3 id="generatesecretapikey">GenerateSecretAPIKey:</h3>
+
+The Secret Key Generator API is used to generate a secret API key using a valid user ID and the OTP received from the Generate OTP API.Once the request is successful, the secret API key is sent to the user’s registered email ID.
+Do not share your secret API key with anyone.The secret API key does not have an expiry. You can use the same secret API key to generate the access token. To generate a new secret API key, you must start again with the OTP generation flow.
+
+    
+#### Sample Generate Secret APIKey Request:
+```java
+SecretKeyGenerateApi secretKeyApi = new SecretKeyGenerateApi();
+SecretKeyGeneratorRequest secretKeyRequest = new SecretKeyGeneratorRequest();
+secretKeyRequest.setUid("XX1234");
+secretKeyRequest.setOtp("XXXX");
+SecretKeyGeneratorResponse secretKeyResponse = secretKeyApi.generateSecretKey(secretKeyRequest);
+
+```
+ 
+#### Sample Generate Otp Response:
+```json
+{
+    "serverTime": "17/12/25 10:02:41",
+    "msgId": "73d115fd-ed3a-47f2-ae04-f40083c3bccf",
+    "status": "Success",
+    "statusMessage": "The secret API key has been sent to your email."
+}
+```
+
+### <h3 id="generateaccesstoken">GenerateAccessToken:</h3>
+
+The Token API is used to generate an access token using a valid user ID and the secret API key received from the Secret Key Generator API on your registered email ID.The access token is valid for 24 hours.If the access token expires, you can generate a new access token using the same secret API key.
+
+    
+#### Sample Generate AccessToken Request:
+```java
+AccessTokenApi accessTokenApi = new AccessTokenApi();
+AccessTokenRequest accessTokenRequest = new AccessTokenRequest();
+accessTokenRequest.setUid("XX1234");
+accessTokenRequest.setSecretApiKey("XXXXXXXXXXXXXXXXX");
+AccessTokenResponse accessTokenResponse = accessTokenApi.accessToken(accessTokenRequest);
+
+```
+ 
+#### Sample Generate AccessToken Response:
+```json
+{
+    "serverTime": "17/12/25 10:15:08",
+    "msgId": "66b290f4-343e-4e08-85e5-67f708feb5f0",
+    "status": "Success",
+    "accessToken": "XXXXXXXXXXXXXiSUg_Ps6A942Lif"
+}
+```
+
+### <h3 id="ipregistration">IpRegistration:</h3>
+
+The Ip Register API is used to register the primary and secondary static IP addresses for a client. Once IPs are registered, the client can access the APIs only from these IP addresses.The IP address must be a valid IPv4 address.If a user tries to access the API from any other IP address, the request will be rejected with an error.
+
+    
+#### Sample Ip Registration Request:
+```java
+IpRegisterApi ip = new IpRegisterApi();
+IpRegisterRequest req = new IpRegisterRequest();
+req.setClientId("XX1234");
+req.setPrimaryIp("XXX.XX.XX.XXX");
+req.setSecondaryIp("XXX.XX.XX.XXX");
+req.setPassword("XXX@123");
+IpRegisterResponse res = ip.ipRegister(req);
+
+```
+ 
+#### Sample Ip Registration Response:
+```json
+{
+    "serverTime": "29/01/26 10:46:06",
+    "msgId": "d5f083f3-1b04-4b97-9385-1e578fdfeb7a",
+    "status": "Success",
+    "statusMessage": "Client IPs registered successfully",
+    "data": {
+        "user_id": "DV99999",
+        "primary_ip": "XXX.XX.XX.XXX",
+        "secondary_ip": "XXX.XX.XX.XXX",
+        "ip_updated_at": "2026-01-29T05:16:07.000Z"
+    }
+}
+```
+
+### <h3 id="ipupdate">IPUpdate:</h3>
+
+The IP Update API is used to update the primary and/or secondary static IP addresses for a client. Once the IPs are updated, the client can access the APIs only from the newly registered IP addresses.A user is allowed to update the IP addresses only once per calendar week.
+
+    
+#### Sample Ip Update Request:
+```java
+IpUpdateApi upip = new IpUpdateApi();
+IpUpdateRequest upreq = new IpUpdateRequest();
+upreq.setClientId("XX1234");
+upreq.setPrimaryIp("XXX.XX.XX.XXX");
+upreq.setSecondaryIp("XXX.XX.XX.XXX");
+upreq.setPassword("XX@123");
+IpUpdateResponse upres = upip.ipUpdate(upreq);
+
+```
+ 
+#### Sample Ip Update Response:
+```json
+{
+    "serverTime": "29/01/26 10:46:06",
+    "msgId": "d5f083f3-1b04-4b97-9385-1e578fdfeb7a",
+    "status": "Success",
+    "statusMessage": "Client IPs updated successfully",
+    "data": {
+        "user_id": "DV99999",
+        "primary_ip": "XXX.XX.XX.XXX",
+        "secondary_ip": "XXX.XX.XX.XXX",
+        "ip_updated_at": "2026-01-29T05:16:07.000Z"
+    }
+}
+```
 
 ### <h3 id="personalindex">PersonalIndex:</h3>
 
