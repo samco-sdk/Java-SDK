@@ -28,6 +28,40 @@
 
 * Java 1.8 and above
 
+
+### Prerequisites (One-Time Setup)
+
+The following steps must be completed before using the APIs:
+
+1. **Register Static IP**  
+   Register your static IP using the  
+   <a href="#ipregistration">IP Registration</a> or  
+   <a href="#ipupdate">IP Update</a> API.
+
+2. **Generate OTP**  
+   Generate a One-Time Password (OTP) using the  
+   <a href="#generateotp">Generate OTP</a> API.
+
+3. **Generate Secret API Key**  
+   Use the OTP from the previous step to generate your Secret API Key using the  
+   <a href="#generatesecretapikey">Generate Secret API Key</a> API.
+   
+   
+### Authentication (Required for Login)
+
+4. **Generate Access Token**  
+   Call the [Generate Access Token](#generateaccesstoken) API using:
+
+   - `uid`
+   - `secretApiKey` (from [Generate Secret API Key](#generatesecretapikey))
+
+   Notes:
+   - The **Secret API Key does not expire** and can be reused.
+   - You can generate multiple access tokens using the same Secret API Key.
+   - The **access token is valid for 24 hours**.
+   - A new access token must be generated after expiry.
+   - This access token is required for the **Login API**.
+   
 ### Steps
 
 1. Get StockNote Java Bridge Jar from the below link
