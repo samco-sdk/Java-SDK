@@ -58,9 +58,11 @@ The following steps must be completed before using the APIs:
    Notes:
    - The **Secret API Key does not expire** and can be reused.
    - You can generate multiple access tokens using the same Secret API Key.
-   - The **access token is valid for 24 hours**.
+   - This token is valid for one day.
+   - It expires before **8:00 AM** the next day.
    - A new access token must be generated after expiry.
    - This access token is required for the **Login API**.
+   
    
 ### Steps
 
@@ -243,7 +245,7 @@ SecretKeyGeneratorResponse secretKeyResponse = secretKeyApi.generateSecretKey(se
 
 ### <h3 id="generateaccesstoken">GenerateAccessToken:</h3>
 
-The Token API is used to generate an access token using a valid user ID and the secret API key received from the Secret Key Generator API on your registered email ID.The access token is valid for 24 hours.If the access token expires, you can generate a new access token using the same secret API key.
+The Token API is used to generate an access token using a valid user ID and the secret API key received from the Secret Key Generator API on your registered email ID.The access token is valid for one day.It expires before 8:00 AM the next day.If the access token expires, you can generate a new access token using the same secret API key.
 
     
 #### Sample Generate AccessToken Request:
