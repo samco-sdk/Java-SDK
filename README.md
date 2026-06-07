@@ -26,49 +26,46 @@
    
 ### Prerequisites 
 
-* Java 1.8 and above
+* Java 17 and above (the 3.2.0 build targets `maven.compiler.release=17`).
 
 
 ### Prerequisites (One-Time Setup)
 
-The following steps must be completed before using the APIs:
+Starting with **v3.2.0**, the recommended way to authenticate is the **Session Token (Direct)** flow using an OAuth app's `apiKey` and `apiSecret`. The older OTP + Secret-Key + Access-Token + Password-Login flow is still supported (see <a href="#login">Login</a>), but new integrations should prefer the steps below.
 
-1. **Register Static IP**  
-   Register your static IP using the  
-   <a href="#ipregistration">IP Registration</a> or  
-   <a href="#ipupdate">IP Update</a> API.
+1. **Create an OAuth app**  
+   Log in to the [Web Dashboard](https://docs-tradeapi.samco.in/dashboard/user-manual) and create an app. The dashboard returns an `apiKey` and `apiSecret` pair (you can have up to 5 active pairs per account).
 
-2. **Generate OTP**  
-   Generate a One-Time Password (OTP) using the  
-   <a href="#generateotp">Generate OTP</a> API.
+2. **Register a Static IP**  
+   Register a primary (and optional secondary) static IP for the app via the Dashboard. Order-related APIs reject traffic from non-whitelisted IPs. You can also use the legacy <a href="#ipregistration">IpRegister</a> / <a href="#ipupdate">IpUpdate</a> APIs.
 
-3. **Generate Secret API Key**  
-   Use the OTP from the previous step to generate your Secret API Key using the  
-   <a href="#generatesecretapikey">Generate Secret API Key</a> API.
-   
-   
-### Authentication (Required for Login)
+3. **(Optional) Confirm your egress IP**  
+   Call the new <a href="#whoami">WhoAmI</a> API to confirm the IP our servers see you from — useful for debugging `403 — The IP is not the registered static IP` errors. This endpoint does **not** consume your SEBI weekly IP-update slot.
 
-4. **Generate Access Token**  
-   Call the [Generate Access Token](#generateaccesstoken) API using:
 
-   - `uid`
-   - `secretApiKey` (from [Generate Secret API Key](#generatesecretapikey))
+### Authentication
 
-   Notes:
+4. **Generate Session Token (recommended, v3.2.0+)**  
+   Call the [Generate Session Token](#sessiontoken) API using:
+
+   - `apiKey`    — AES-encrypted API key from the Dashboard
+   - `apiSecret` — AES-encrypted API secret from the Dashboard
+
+   The response carries a `sessionToken` which is sent as the `x-session-token` header on every subsequent Trade API call. This single call replaces the legacy 4-step OTP/Secret-Key/Access-Token/Login flow.
+
+   For browser-based, end-user delegated sign-in instead of a backend integration, use the [OAuth 2.1 Authorization-Code Flow](https://docs-tradeapi.samco.in/oauth/authorize-flow) (documented in the Trade API docs; not wrapped in the Java SDK).
+
+5. **Legacy: Generate Access Token + Login**  
+   If you are still on password-based auth, call the [Generate Access Token](#generateaccesstoken) API with `uid` + `secretApiKey`, then call <a href="#login">UserLogin</a> with `userId`, `password`, `yob`, and `accessToken`. Notes on the access token:
    - The **Secret API Key does not expire** and can be reused.
-   - You can generate multiple access tokens using the same Secret API Key.
-   - This token is valid for one day.
-   - It expires before **8:00 AM** the next day.
-   - A new access token must be generated after expiry.
-   - This access token is required for the **Login API**.
+   - The access token is valid for one day and expires before **8:00 AM** the next day.
    
    
 ### Steps
 
 1. Get StockNote Java Bridge Jar from the below link
 
-    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/samco-bridge-java-3.1.0.jar
+    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/samco-bridge-java-3.2.0.jar
 
 2. Setup Jar File
 
@@ -76,14 +73,14 @@ The following steps must be completed before using the APIs:
 
     * Install jar file into your local .m2 repository using the below command :
     
-      mvn install:install-file -Dfile="[path to jar]/java_sdk.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=io.samco -DartifactId=samco-bridge-java -Dversion=3.1.0 -Dpackaging=jar
+      mvn install:install-file -Dfile="[path to jar]/samco-bridge-java-3.2.0.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=in.samco -DartifactId=samco-bridge-java -Dversion=3.2.0 -Dpackaging=jar
 	
     * Add the below dependency into pom.xml file .
 	
 	            <dependency>
-		           <groupId>io.samco</groupId>
+		           <groupId>in.samco</groupId>
 		           <artifactId>samco-bridge-java</artifactId>
-		           <version>3.1.0</version>
+		           <version>3.2.0</version>
 	           </dependency>
 
      * For gradle user use the same maven command for install jar into local repository
@@ -94,21 +91,23 @@ The following steps must be completed before using the APIs:
 				      }
 		    
 		    dependencies {
-   			                implementation 'io.samco:samco-bridge-java:3.1.0'
+   			                implementation 'in.samco:samco-bridge-java:3.2.0'
 			             }
 
      * Adding jar to build path in eclipse based IDE's 
      
-        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include samco-bridge-java-3.1.0.jar 
+        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include samco-bridge-java-3.2.0.jar 
             
 			   
 			   
 ###  List of supported API
 
- *  <a href="#login">Login</a>
- *  <a href="#generateotp">GenerateOtp</a>
- *  <a href="#generatesecretapikey">GenerateSecretAPIKey</a>
- *  <a href="#generateaccesstoken">GenerateAccessToken</a>
+ *  <a href="#sessiontoken">GenerateSessionToken</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#whoami">WhoAmI</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#login">Login</a> *(legacy)*
+ *  <a href="#generateotp">GenerateOtp</a> *(legacy)*
+ *  <a href="#generatesecretapikey">GenerateSecretAPIKey</a> *(legacy)*
+ *  <a href="#generateaccesstoken">GenerateAccessToken</a> *(legacy)*
  *  <a href="#ipregistration">IpRegistration</a>
  *  <a href="#ipupdate">IPUpdate</a>
  *  <a href="#personalindex">PersonalIndex</a>
@@ -123,6 +122,7 @@ The following steps must be completed before using the APIs:
  *  <a href="#placeorder">PlaceOrder</a>
  *  <a href="#placeorderBO">PlaceOrderBO</a>
  *  <a href="#placeorderCO">PlaceOrderCO</a>
+ *  <a href="#bulkorder">BulkOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
  *  <a href="#modify_order">ModifyOrder</a>
  *  <a href="#orderbook">OrderBook</a>
  *  <a href="#triggerorder">TriggerOrders</a>
@@ -146,12 +146,109 @@ The following steps must be completed before using the APIs:
  *  <a href="#indexIntraDayCandleData">IndexIntraDayCandleData</a>
  *  <a href="#historicalCandleData">HistoricalCandleData</a>
  *  <a href="#indexHistoricalCandleData">IndexHistoricalCandleData</a>
+ *  <a href="#listBasket">ListBasket</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#createBasket">CreateBasket</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#modifyBasket">ModifyBasket</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#deleteBasket">DeleteBasket</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#listBasketOrder">ListBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#createBasketOrder">CreateBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#modifyBasketOrder">ModifyBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#deleteBasketOrder">DeleteBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#executeBasket">ExecuteBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#placeAtMarket">PlaceAtMarket</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#basketSquareOff">BasketSquareOff</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#modifyAndRetry">ModifyAndRetry</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#basketSpanCalculator">BasketSpanCalculator</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#analyticsSummary">AnalyticsSummary</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#analyticsDetails">AnalyticsDetails</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#gainLoss">GainLoss</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#contractAnalyser">ContractAnalyser</a> &nbsp;<sup>NEW in 3.2.0</sup>
+ *  <a href="#streaming">Streaming (WebSocket)</a> &nbsp;<sup>NEW in 3.2.0</sup>
  *  <a href="#logout">Logout</a>
+
+
+### <h3 id="sessiontoken">GenerateSessionToken (v3.2.0):</h3>
+
+The recommended way to obtain a session token from v3.2.0 onwards. Exchanges your OAuth app's AES-encrypted `apiKey` + `apiSecret` (created in the [Web Dashboard](https://docs-tradeapi.samco.in/dashboard/user-manual)) for a `sessionToken`. The returned token is sent as the `x-session-token` header on every subsequent Trade API call.
+
+This single call replaces the legacy 4-step OTP → SecretKey → AccessToken → Login flow. Both values **must** be AES-encrypted as described in the docs.
+
+#### Parameters:
+
+    apiKey, apiSecret    (both AES-encrypted)
+
+#### Sample Generate Session Token Request:
+```java
+SessionTokenApi sessionApi = new SessionTokenApi();
+SessionTokenResponse session =
+        sessionApi.generate("<AES_ENCRYPTED_API_KEY>", "<AES_ENCRYPTED_API_SECRET>");
+String sessionToken = session.getSessionToken();
+```
+
+A request-bean form is also available:
+```java
+SessionTokenRequest req = new SessionTokenRequest();
+req.setApiKey("<AES_ENCRYPTED_API_KEY>");
+req.setApiSecret("<AES_ENCRYPTED_API_SECRET>");
+SessionTokenResponse session = new SessionTokenApi().generate(req);
+```
+
+#### Sample Generate Session Token Response:
+```json
+{
+    "serverTime": "29/01/26 10:46:06",
+    "msgId": "d5f083f3-1b04-4b97-9385-1e578fdfeb7a",
+    "status": "Success",
+    "statusMessage": "Session token generated successfully",
+    "sessionToken": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+    "tokenId": "550e8400-e29b-41d4-a716-446655440000",
+    "accountID": "DV99999",
+    "accountName": "JOHN DOE",
+    "exchangeList": ["NSE", "BSE", "NFO", "MCX"],
+    "orderTypeList": ["L", "MKT", "SL", "SL-M"],
+    "productList": ["MIS", "CNC", "NRML"],
+    "srcIp": "203.0.113.10",
+    "primaryIp": "203.0.113.10",
+    "secondaryIp": "203.0.113.11"
+}
+```
+
+
+### <h3 id="whoami">WhoAmI (v3.2.0):</h3>
+
+A read-only diagnostic that reports the **source IP our server sees you calling from**, plus your currently-registered `PRIMARY` / `SECONDARY` IPs, and whether the source IP matches one of them.
+
+Use it to debug `403 — The IP is not the registered static IP` errors — call it from the *same host* that was rejected to see the exact IP the server received. This endpoint does **not** consume the SEBI weekly IP-update slot.
+
+#### Parameters:
+
+    sessionToken
+
+#### Sample WhoAmI Request:
+```java
+WhoAmIApi whoAmIApi = new WhoAmIApi();
+WhoAmIResponse whoAmI = whoAmIApi.whoami(sessionToken);
+```
+
+#### Sample WhoAmI Response:
+```json
+{
+    "serverTime": "03/06/26 10:46:06",
+    "msgId": "d5f083f3-1b04-4b97-9385-1e578fdfeb7a",
+    "status": "Success",
+    "statusMessage": "Calling from registered PRIMARY IP (203.0.113.10).",
+    "srcIp": "203.0.113.10",
+    "primaryIp": "203.0.113.10",
+    "secondaryIp": "203.0.113.11",
+    "matches": true,
+    "matchedAs": "PRIMARY"
+}
+```
 
 
 ### <h3 id="login">Login Api:</h3>
 
-   Java Bridge allows user authentication using UserLoginApi. A valid StockNote Trading Account and subscription to StockNote API Services is a pre-requisite for successful authentication.
+   Java Bridge allows user authentication using UserLoginApi. A valid StockNote Trading Account and subscription to StockNote API Services is a pre-requisite for successful authentication. *(Legacy flow — new integrations should prefer <a href="#sessiontoken">GenerateSessionToken</a>.)*
 
 #### Parameters:
 
@@ -1016,6 +1113,48 @@ To place an equity/derivative CO order with the exchange i.e the place order CO 
         "orderTime" : "01/06/2020 14:36:32"
       }
     }
+
+### <h3 id="bulkorder">BulkOrder (v3.2.0):</h3>
+
+Submit multiple regular orders in a single request. Each entry of `orders` is a standard `OrderRequest` (same shape used by <a href="#placeorder">PlaceOrder</a>).
+
+#### Parameters:
+
+    xSessionToken, bulkRequest (BulkOrderRequest with a List<OrderRequest> orders)
+
+#### Sample BulkOrder Request:
+```java
+OrdersApi ordersApi = new OrdersApi();
+
+OrderRequest o1 = new OrderRequest();
+o1.setSymbolName("SBIN");
+o1.setExchange(SamcoConstants.EXCHANGE_NSE);
+o1.setTransactionType(SamcoConstants.TRANSACTION_TYPE_BUY);
+o1.setOrderType(SamcoConstants.ORDER_TYPE_LIMIT);
+o1.setQuantity("1");
+o1.setPrice("520.50");
+o1.setOrderValidity(SamcoConstants.VALIDITY_DAY);
+o1.setProductType(SamcoConstants.PRODUCT_MIS);
+
+OrderRequest o2 = new OrderRequest();
+// ... configure second order ...
+
+BulkOrderRequest bulk = new BulkOrderRequest();
+bulk.setOrders(java.util.List.of(o1, o2));
+
+BulkOrderResponse resp = ordersApi.bulkOrder(sessionToken, bulk);
+```
+
+#### Sample BulkOrder Response:
+```json
+{
+    "serverTime": "29/01/26 10:46:06",
+    "msgId": "d5f083f3-1b04-4b97-9385-1e578fdfeb7a",
+    "status": "Success",
+    "statusMessage": "Bulk order processed"
+}
+```
+
 
 ###  <h3 id="modify_order">Modify Order:</h3>
 
@@ -2049,6 +2188,267 @@ xSessionToken, positionType
         "volume" : "0"
       }]
     }
+
+### <h3 id="listBasket">ListBasket (v3.2.0):</h3>
+
+Returns the list of saved baskets for the logged-in user.
+
+#### Parameters:
+
+    sessionToken
+
+#### Sample ListBasket Request:
+```java
+BasketApi basketApi = new BasketApi();
+BasketResponse resp = basketApi.listBaskets(sessionToken);
+```
+
+
+### <h3 id="createBasket">CreateBasket (v3.2.0):</h3>
+
+Creates a new basket with a set of `OrderRequest` entries that can later be executed atomically.
+
+#### Parameters:
+
+    sessionToken, BasketEnvelope { basketName, description, orders, newPosition }
+
+#### Sample CreateBasket Request:
+```java
+BasketEnvelope envelope = new BasketEnvelope();
+envelope.setBasketName("MyAlphaBasket");
+envelope.setDescription("Pair-trade leg 1");
+envelope.setOrders(java.util.List.of(orderRequest1, orderRequest2));
+
+BasketResponse resp = new BasketApi().createBasket(sessionToken, envelope);
+String basketId = resp.getBasketId();
+```
+
+
+### <h3 id="modifyBasket">ModifyBasket (v3.2.0):</h3>
+
+Updates basket metadata or its constituent orders.
+
+#### Sample ModifyBasket Request:
+```java
+BasketEnvelope envelope = new BasketEnvelope();
+envelope.setBasketId(basketId);
+envelope.setBasketName("MyAlphaBasket-v2");
+envelope.setOrders(updatedOrderList);
+
+BasketResponse resp = new BasketApi().modifyBasket(sessionToken, envelope);
+```
+
+
+### <h3 id="deleteBasket">DeleteBasket (v3.2.0):</h3>
+
+Deletes a previously-created basket by id.
+
+#### Sample DeleteBasket Request:
+```java
+BasketResponse resp = new BasketApi().deleteBasket(sessionToken, basketId);
+```
+
+
+### <h3 id="listBasketOrder">ListBasketOrder (v3.2.0):</h3>
+
+Lists the orders inside a basket (or all basket orders for the user).
+
+#### Sample ListBasketOrder Request:
+```java
+BasketOrderApi basketOrderApi = new BasketOrderApi();
+BasketResponse resp = basketOrderApi.listBasketOrders(sessionToken);
+```
+
+
+### <h3 id="createBasketOrder">CreateBasketOrder (v3.2.0):</h3>
+
+Appends a new order to an existing basket.
+
+#### Sample CreateBasketOrder Request:
+```java
+BasketEnvelope envelope = new BasketEnvelope();
+envelope.setBasketId(basketId);
+envelope.setOrders(java.util.List.of(orderRequest));
+
+BasketResponse resp = new BasketOrderApi().createBasketOrder(sessionToken, envelope);
+```
+
+
+### <h3 id="modifyBasketOrder">ModifyBasketOrder (v3.2.0):</h3>
+
+Modifies a single order inside an existing basket.
+
+#### Sample ModifyBasketOrder Request:
+```java
+BasketEnvelope envelope = new BasketEnvelope();
+envelope.setBasketId(basketId);
+envelope.setOrderId(orderId);
+envelope.setOrders(java.util.List.of(updatedOrderRequest));
+
+BasketResponse resp = new BasketOrderApi().modifyBasketOrder(sessionToken, envelope);
+```
+
+
+### <h3 id="deleteBasketOrder">DeleteBasketOrder (v3.2.0):</h3>
+
+Removes a specific order from a basket.
+
+#### Sample DeleteBasketOrder Request:
+```java
+BasketResponse resp = new BasketOrderApi().deleteBasketOrder(sessionToken, basketId, orderId);
+```
+
+
+### <h3 id="executeBasket">ExecuteBasketOrder (v3.2.0):</h3>
+
+Executes every order in the basket using its configured `orderType` / `price` / etc.
+
+#### Sample ExecuteBasket Request:
+```java
+BasketResponse resp = new BasketOrderApi().executeBasket(sessionToken, basketId);
+```
+
+
+### <h3 id="placeAtMarket">PlaceAtMarket (v3.2.0):</h3>
+
+Executes every order in the basket at market price (overriding individual order types).
+
+#### Sample PlaceAtMarket Request:
+```java
+BasketResponse resp = new BasketOrderApi().placeAtMarket(sessionToken, basketId);
+```
+
+
+### <h3 id="basketSquareOff">BasketSquareOff (v3.2.0):</h3>
+
+Squares off all open positions originating from a basket.
+
+#### Sample BasketSquareOff Request:
+```java
+BasketSquareOffRequest req = new BasketSquareOffRequest();
+req.setBasketId(basketId);
+
+BasketResponse resp = new BasketOrderApi().squareOff(sessionToken, req);
+```
+
+
+### <h3 id="modifyAndRetry">ModifyAndRetry (v3.2.0):</h3>
+
+Modifies failed/rejected orders within a basket and re-attempts execution.
+
+#### Sample ModifyAndRetry Request:
+```java
+BasketEnvelope envelope = new BasketEnvelope();
+envelope.setBasketId(basketId);
+envelope.setOrders(retryOrderList);
+
+BasketResponse resp = new BasketOrderApi().modifyAndRetry(sessionToken, envelope);
+```
+
+
+### <h3 id="basketSpanCalculator">BasketSpanCalculator (v3.2.0):</h3>
+
+Returns the total SPAN + exposure margin required to execute the basket.
+
+#### Sample BasketSpanCalculator Request:
+```java
+BasketSpanRequest req = new BasketSpanRequest();
+req.setBasketId(basketId);
+
+BasketResponse resp = new BasketOrderApi().spanCalculator(sessionToken, req);
+Double spanMargin = resp.getSpanMargin();
+Double totalMargin = resp.getTotalMargin();
+```
+
+
+### <h3 id="analyticsSummary">AnalyticsSummary (v3.2.0):</h3>
+
+High-level analytics summary for the user's portfolio over a duration or explicit date range.
+
+#### Parameters:
+
+    sessionToken, AnalyticsRequest { duration | fromDate + toDate }
+
+#### Sample AnalyticsSummary Request:
+```java
+AnalyticsRequest req = new AnalyticsRequest();
+req.setDuration("1D");   // or set fromDate / toDate
+AnalyticsResponse resp = new AnalyticsApi().getSummary(sessionToken, req);
+```
+
+
+### <h3 id="analyticsDetails">AnalyticsDetails (v3.2.0):</h3>
+
+Detailed analytics breakdown for the same time window.
+
+#### Sample AnalyticsDetails Request:
+```java
+AnalyticsRequest req = new AnalyticsRequest();
+req.setFromDate("2026-01-01");
+req.setToDate("2026-01-31");
+AnalyticsResponse resp = new AnalyticsApi().getDetails(sessionToken, req);
+```
+
+
+### <h3 id="gainLoss">GainLoss (v3.2.0):</h3>
+
+Realised / unrealised gain-loss summary for the requested window.
+
+#### Sample GainLoss Request:
+```java
+AnalyticsRequest req = new AnalyticsRequest();
+req.setDuration("1M");
+AnalyticsResponse resp = new AnalyticsApi().getGainLoss(sessionToken, req);
+```
+
+
+### <h3 id="contractAnalyser">ContractAnalyser (v3.2.0):</h3>
+
+Analyses derivative contracts on a given exchange/expiry date.
+
+#### Parameters:
+
+    sessionToken, ContractAnalyserRequest { exchange, targetDate }
+
+#### Sample ContractAnalyser Request:
+```java
+ContractAnalyserRequest req = new ContractAnalyserRequest();
+req.setExchange(SamcoConstants.EXCHANGE_NFO);
+req.setTargetDate("2026-02-27");
+
+ContractAnalyserResponse resp = new ContractAnalyserApi().analyseContracts(sessionToken, req);
+```
+
+
+### <h3 id="streaming">Streaming (WebSocket — v3.2.0):</h3>
+
+The Java SDK ships a built-in WebSocket client `in.samco.streaming.StreamingClient` that opens a connection to `wss://stream.samco.in`, authenticates with the session token, and dispatches real-time **quote** and **market-depth** ticks to a `StreamingListener` callback.
+
+A symbol is encoded as `"<securityToken>_<exchange>"` (for example `"3045_NSE"`).
+
+#### Sample Streaming Usage:
+```java
+StreamingListener listener = new StreamingListener() {
+    @Override public void onOpen()                          { System.out.println("connected"); }
+    @Override public void onQuote(QuoteTick tick)           { System.out.println("quote: " + tick); }
+    @Override public void onDepth(DepthTick tick)           { System.out.println("depth: " + tick); }
+    @Override public void onError(Throwable error)          { error.printStackTrace(); }
+    @Override public void onClosed(int code, String reason) { System.out.println("closed: " + reason); }
+};
+
+StreamingClient client = new StreamingClient(listener);
+client.connect(sessionToken).join();
+
+client.subscribeQuote(java.util.List.of(new SymbolRef("3045_NSE")));
+client.subscribeMarketDepth(java.util.List.of(new SymbolRef("3045_NSE")));
+
+// ... later
+client.unsubscribeQuote(java.util.List.of(new SymbolRef("3045_NSE")));
+client.close();
+```
+
+`StreamingListener` defines empty default implementations for `onOpen`, `onQuote`, `onDepth`, `onMessage`, `onError`, and `onClosed` — override only the callbacks you care about.
+
 
 ### <h3 id="logout">Logout:</h3>
 

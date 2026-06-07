@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>in.samco</groupId>
+    <artifactId>samco-bridge-java-samples</artifactId>
+    <version>3.2.0</version>
+    <packaging>jar</packaging>
+
+    <name>samco-bridge-java-samples</name>
+    <description>Runnable samples for the SAMCO Stocknote Java Bridge SDK</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <maven.compiler.release>17</maven.compiler.release>
+    </properties>
+
+    <dependencies>
+        <!--
+          The SDK JAR. Install it once from the dist/ folder:
+
+            mvn install:install-file \
+              -Dfile=../dist/samco-bridge-java-3.2.0.jar \
+              -DgroupId=in.samco \
+              -DartifactId=samco-bridge-java \
+              -Dversion=3.2.0 \
+              -Dpackaging=jar
+        -->
+        <dependency>
+            <groupId>in.samco</groupId>
+            <artifactId>samco-bridge-java</artifactId>
+            <version>3.2.0</version>
+        </dependency>
+    </dependencies>
+
+    <build>
+        <!-- The samples sit flat next to this pom.xml, not in src/main/java. -->
+        <sourceDirectory>${project.basedir}</sourceDirectory>
+
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-compiler-plugin</artifactId>
+                <version>3.13.0</version>
+                <configuration>
+                    <includes>
+                        <include>*.java</include>
+                    </includes>
+                </configuration>
+            </plugin>
+
+            <!--
+              Run a sample with:
+
+                mvn -q compile exec:java -Dexec.mainClass=in.samco.SessionTokenSample
+
+              Replace the class name with any of:
+                in.samco.SessionTokenSample
+                in.samco.WhoAmISample
+                in.samco.OAuthTokenExchangeSample
+                in.samco.QuoteSample
+                in.samco.PlaceOrderSample
+                in.samco.StreamingQuoteSample
+                in.samco.StreamingMarketDepthSample
+                in.samco.Sample
+            -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.4.1</version>
+                <configuration>
+                    <mainClass>in.samco.SessionTokenSample</mainClass>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
+</project>
