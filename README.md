@@ -39,7 +39,7 @@ Starting with **v3.2.0**, the recommended way to authenticate is the **Session T
 2. **Register a Static IP**  
    Register a primary (and optional secondary) static IP for the app via the Dashboard. Order-related APIs reject traffic from non-whitelisted IPs. You can also use the legacy <a href="#ipregistration">IpRegister</a> / <a href="#ipupdate">IpUpdate</a> APIs.
 
-3. **(Optional) Confirm your egress IP**  
+3. **(Optional) Confirm your source IP**  
    Call the new <a href="#whoami">WhoAmI</a> API to confirm the IP our servers see you from — useful for debugging `403 — The IP is not the registered static IP` errors. This endpoint does **not** consume your SEBI weekly IP-update slot.
 
 

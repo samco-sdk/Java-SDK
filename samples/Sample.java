@@ -30,7 +30,7 @@ public class Sample {
                 return;
             }
 
-            // 2. (Optional) Confirm the egress IP the server sees matches a registered static IP.
+            // 2. (Optional) Confirm the source IP the server sees matches a registered static IP.
             WhoAmIResponse whoAmI = new WhoAmIApi().whoami(sessionToken);
             System.out.println("WhoAmI : clientIp=" + whoAmI.getClientIp()
                     + " primaryIp=" + whoAmI.getPrimaryIp());
