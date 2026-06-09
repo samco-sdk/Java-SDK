@@ -70,6 +70,10 @@ mvn -q compile exec:java -Dexec.mainClass=in.samco.client.SessionTokenSample
 | `in.samco.client.SessionTokenSample`         | `POST /session/token` — direct JWT auth                    | [Generate session token](https://docs-tradeapi.samco.in/session/generate-token.html)        |
 | `in.samco.client.WhoAmISample`               | `GET /ip/whoami` — IP diagnostics                          | [Who Am I](https://docs-tradeapi.samco.in/static-ip/whoami.html)                            |
 | `in.samco.client.QuoteSample`                | `GET /quote/getQuote`                                      | [Get quote](https://docs-tradeapi.samco.in/quote/get-quote.html)                            |
+| `in.samco.client.PositionsSample`            | `GET /position/getPositions?positionType=NET`              | [Get positions](https://docs-tradeapi.samco.in/position/get-positions.html)                 |
+| `in.samco.client.HoldingsSample`             | `GET /holding/getHoldings`                                 | [Get holdings](https://docs-tradeapi.samco.in/holding/get-holdings.html)                    |
+| `in.samco.client.OrderBookSample`            | `GET /order/orderBook`                                     | [Order book](https://docs-tradeapi.samco.in/order/order-book.html)                          |
+| `in.samco.client.OrderStatusSample`          | `GET /order/getOrderStatus?orderNumber=...`                | [Order status](https://docs-tradeapi.samco.in/order/order-status.html)                      |
 | `in.samco.client.PlaceOrderSample`           | `POST /order/placeOrder` (LIMIT variant)                   | [Place order](https://docs-tradeapi.samco.in/order/place-order.html)                        |
 | `in.samco.client.StreamingQuoteSample`       | WebSocket quote channel (`StreamingClient.subscribeQuote`) | [Streaming quote data](https://docs-tradeapi.samco.in/streaming/streaming-quote-data.html)  |
 | `in.samco.client.StreamingMarketDepthSample` | WebSocket market-depth channel                             | [Streaming market data](https://docs-tradeapi.samco.in/streaming/streaming-market-data.html)|
