@@ -34,16 +34,20 @@ public class QuickStartSample {
         runStep("1. SessionTokenSample", () -> SessionTokenSample.run(cfg));
         runStep("2. WhoAmISample",       () -> WhoAmISample.run(cfg));
         runStep("3. QuoteSample",        () -> QuoteSample.run(cfg));
+        runStep("4. PositionsSample",    () -> PositionsSample.run(cfg));
+        runStep("5. HoldingsSample",     () -> HoldingsSample.run(cfg));
+        runStep("6. OrderBookSample",    () -> OrderBookSample.run(cfg));
+        runStep("7. OrderStatusSample",  () -> OrderStatusSample.run(cfg));
 
         if (flag(cfg, "samco.runPlaceOrder")) {
-            runStep("4. PlaceOrderSample", () -> PlaceOrderSample.run(cfg));
+            runStep("8. PlaceOrderSample", () -> PlaceOrderSample.run(cfg));
         } else {
             skipped("PlaceOrderSample", "samco.runPlaceOrder=false (destructive — set to true to enable)");
         }
 
         if (flag(cfg, "samco.runStreaming")) {
-            runStep("5. StreamingQuoteSample",       () -> StreamingQuoteSample.run(cfg));
-            runStep("6. StreamingMarketDepthSample", () -> StreamingMarketDepthSample.run(cfg));
+            runStep("9. StreamingQuoteSample",        () -> StreamingQuoteSample.run(cfg));
+            runStep("10. StreamingMarketDepthSample", () -> StreamingMarketDepthSample.run(cfg));
         } else {
             skipped("Streaming samples", "samco.runStreaming=false");
         }
