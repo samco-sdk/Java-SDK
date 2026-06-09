@@ -4,6 +4,8 @@
    
    This documentation covers details of the Java bridge / SDK provided by SAMCO, for accessing the <a href="https://docs-tradeapi.samco.in/#samco-api-documentation">SAMCO Trade API.</a>
 
+   📘 **API Documentation:** [https://docs-tradeapi.samco.in/overview.html](https://docs-tradeapi.samco.in/overview.html)
+
 ## Overview
 
    * Java SDK is created for users to easily access our Stocknote API platform from Java based applications.
@@ -48,8 +50,8 @@ Starting with **v3.2.0**, the recommended way to authenticate is the **Session T
 4. **Generate Session Token (recommended, v3.2.0+)**  
    Call the [Generate Session Token](#sessiontoken) API using:
 
-   - `apiKey`    — AES-encrypted API key from the Dashboard
-   - `apiSecret` — AES-encrypted API secret from the Dashboard
+   - `apiKey`    — API key from the Dashboard
+   - `apiSecret` — API secret from the Dashboard
 
    The response carries a `sessionToken` which is sent as the `x-session-token` header on every subsequent Trade API call. This single call replaces the legacy 4-step OTP/Secret-Key/Access-Token/Login flow.
 
@@ -71,27 +73,20 @@ Starting with **v3.2.0**, the recommended way to authenticate is the **Session T
 
     * For maven user
 
-    * Install jar file into your local .m2 repository using the below command :
-    
-      mvn install:install-file -Dfile="[path to jar]/samco-bridge-java-3.2.0.jar" -DlocalRepositoryPath="[path to repo]/repo" -DgroupId=in.samco -DartifactId=samco-bridge-java -Dversion=3.2.0 -Dpackaging=jar
-	
-    * Add the below dependency into pom.xml file .
-	
+    * Drop `samco-bridge-java-3.2.0.jar` into a folder inside your project (for example `lib/`) and add the dependency below to your `pom.xml`. Then run `mvn clean install` (or `mvn clean package`) — Maven will pick the jar up directly from the path, no `mvn install:install-file` bootstrap required.
+
 	            <dependency>
 		           <groupId>in.samco</groupId>
 		           <artifactId>samco-bridge-java</artifactId>
 		           <version>3.2.0</version>
+		           <scope>system</scope>
+		           <systemPath>${project.basedir}/lib/samco-bridge-java-3.2.0.jar</systemPath>
 	           </dependency>
 
-     * For gradle user use the same maven command for install jar into local repository
+     * For gradle user, drop the jar into a `libs/` folder and reference it directly:
 
-                    
-		    repositories {
- 				         mavenLocal()
-				      }
-		    
 		    dependencies {
-   			                implementation 'in.samco:samco-bridge-java:3.2.0'
+   			                implementation files('libs/samco-bridge-java-3.2.0.jar')
 			             }
 
      * Adding jar to build path in eclipse based IDE's 
@@ -169,27 +164,27 @@ Starting with **v3.2.0**, the recommended way to authenticate is the **Session T
 
 ### <h3 id="sessiontoken">GenerateSessionToken (v3.2.0):</h3>
 
-The recommended way to obtain a session token from v3.2.0 onwards. Exchanges your OAuth app's AES-encrypted `apiKey` + `apiSecret` (created in the [Web Dashboard](https://docs-tradeapi.samco.in/dashboard/user-manual)) for a `sessionToken`. The returned token is sent as the `x-session-token` header on every subsequent Trade API call.
+The recommended way to obtain a session token from v3.2.0 onwards. Exchanges your OAuth app's `apiKey` + `apiSecret` (created in the [Web Dashboard](https://docs-tradeapi.samco.in/dashboard/user-manual)) for a `sessionToken`. The returned token is sent as the `x-session-token` header on every subsequent Trade API call.
 
-This single call replaces the legacy 4-step OTP → SecretKey → AccessToken → Login flow. Both values **must** be AES-encrypted as described in the docs.
+This single call replaces the legacy 4-step OTP → SecretKey → AccessToken → Login flow.
 
 #### Parameters:
 
-    apiKey, apiSecret    (both AES-encrypted)
+    apiKey, apiSecret
 
 #### Sample Generate Session Token Request:
 ```java
 SessionTokenApi sessionApi = new SessionTokenApi();
 SessionTokenResponse session =
-        sessionApi.generate("<AES_ENCRYPTED_API_KEY>", "<AES_ENCRYPTED_API_SECRET>");
+        sessionApi.generate("<YOUR_API_KEY>", "<YOUR_API_SECRET>");
 String sessionToken = session.getSessionToken();
 ```
 
 A request-bean form is also available:
 ```java
 SessionTokenRequest req = new SessionTokenRequest();
-req.setApiKey("<AES_ENCRYPTED_API_KEY>");
-req.setApiSecret("<AES_ENCRYPTED_API_SECRET>");
+req.setApiKey("<YOUR_API_KEY>");
+req.setApiSecret("<YOUR_API_SECRET>");
 SessionTokenResponse session = new SessionTokenApi().generate(req);
 ```
 

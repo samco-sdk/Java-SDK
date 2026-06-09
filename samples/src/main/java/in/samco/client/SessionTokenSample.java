@@ -1,4 +1,6 @@
-package in.samco;
+package in.samco.client;
+
+import java.util.Properties;
 
 import in.samco.api.QuoteApi;
 import in.samco.api.update.SessionTokenApi;
@@ -12,18 +14,23 @@ import in.samco.util.SamcoConstants;
  * Exchanges an OAuth app's AES-encrypted apiKey + apiSecret for a session JWT,
  * then reuses that JWT as the x-session-token on a follow-up Trade API call.
  *
- * See ta-api-docs/session/generate-token.md for the wire contract.
+ * See https://docs-tradeapi.samco.in/session/generate-token.html for the wire contract.
  */
 public class SessionTokenSample {
 
     public static void main(String[] args) throws Exception {
+        Properties cfg = QuickStartSample.loadConfig();
+        QuickStartSample.requireRealCredentials(cfg);
+        run(cfg);
+    }
 
-        String encryptedApiKey    = "<AES_ENCRYPTED_API_KEY>";
-        String encryptedApiSecret = "<AES_ENCRYPTED_API_SECRET>";
+    public static void run(Properties cfg) throws Exception {
 
         // 1. Exchange API key + secret for a session token.
         SessionTokenApi auth = new SessionTokenApi();
-        SessionTokenResponse session = auth.generate(encryptedApiKey, encryptedApiSecret);
+        SessionTokenResponse session = auth.generate(
+                QuickStartSample.apiKey(cfg),
+                QuickStartSample.apiSecret(cfg));
         System.out.println("status        : " + session.getStatus());
         System.out.println("statusMessage : " + session.getStatusMessage());
         System.out.println("accountID     : " + session.getAccountID());

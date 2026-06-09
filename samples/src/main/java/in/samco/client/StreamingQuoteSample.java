@@ -1,6 +1,7 @@
-package in.samco;
+package in.samco.client;
 
 import java.util.List;
+import java.util.Properties;
 
 import in.samco.api.update.SessionTokenApi;
 import in.samco.streaming.QuoteTick;
@@ -21,14 +22,20 @@ import in.samco.streaming.SymbolRef;
  * A SymbolRef is encoded as "&lt;securityToken&gt;_&lt;exchange&gt;",
  * e.g. "3045_NSE" for SBIN on NSE Cash, or "89017_NFO" for an F&amp;O leg.
  *
- * See ta-api-docs/streaming/streaming-quote-data.md.
+ * See https://docs-tradeapi.samco.in/streaming/streaming-quote-data.html.
  */
 public class StreamingQuoteSample {
 
     public static void main(String[] args) throws Exception {
+        Properties cfg = QuickStartSample.loadConfig();
+        QuickStartSample.requireRealCredentials(cfg);
+        run(cfg);
+    }
+
+    public static void run(Properties cfg) throws Exception {
 
         String sessionToken = new SessionTokenApi()
-                .generate("<AES_ENCRYPTED_API_KEY>", "<AES_ENCRYPTED_API_SECRET>")
+                .generate(QuickStartSample.apiKey(cfg), QuickStartSample.apiSecret(cfg))
                 .getSessionToken();
 
         StreamingListener listener = new StreamingListener() {
@@ -39,13 +46,11 @@ public class StreamingQuoteSample {
 
             @Override
             public void onQuote(QuoteTick tick) {
-                // Parsed quote frame — fields like ltp, ltq, volume, oi, sym, exc, etc.
                 System.out.println("[quote-stream] tick: " + tick);
             }
 
             @Override
             public void onMessage(String text) {
-                // Raw frames that did not match a known shape (ack frames, errors, …).
                 System.out.println("[quote-stream] raw: " + text);
             }
 
@@ -63,16 +68,13 @@ public class StreamingQuoteSample {
         StreamingClient client = new StreamingClient(listener);
         client.connect(sessionToken).join();
 
-        // Subscribe to two symbols: SBIN on NSE and an F&O contract on NFO.
         List<SymbolRef> symbols = List.of(
                 new SymbolRef("3045_NSE"),
                 new SymbolRef("89017_NFO"));
         client.subscribeQuote(symbols);
 
-        // Keep the process alive long enough to receive ticks.
         Thread.sleep(30_000);
 
-        // Cleanly tear down — important: unsubscribe so the server stops sending.
         client.unsubscribeQuote(symbols);
         client.close();
     }

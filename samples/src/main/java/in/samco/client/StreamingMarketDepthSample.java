@@ -1,6 +1,7 @@
-package in.samco;
+package in.samco.client;
 
 import java.util.List;
+import java.util.Properties;
 
 import in.samco.api.update.SessionTokenApi;
 import in.samco.streaming.DepthTick;
@@ -16,14 +17,20 @@ import in.samco.streaming.SymbolRef;
  * bids / best asks) plus derived analytics fields (delta/gamma/theta/vega/iv
  * for F&amp;O contracts).
  *
- * See ta-api-docs/streaming/streaming-market-data.md.
+ * See https://docs-tradeapi.samco.in/streaming/streaming-market-data.html.
  */
 public class StreamingMarketDepthSample {
 
     public static void main(String[] args) throws Exception {
+        Properties cfg = QuickStartSample.loadConfig();
+        QuickStartSample.requireRealCredentials(cfg);
+        run(cfg);
+    }
+
+    public static void run(Properties cfg) throws Exception {
 
         String sessionToken = new SessionTokenApi()
-                .generate("<AES_ENCRYPTED_API_KEY>", "<AES_ENCRYPTED_API_SECRET>")
+                .generate(QuickStartSample.apiKey(cfg), QuickStartSample.apiSecret(cfg))
                 .getSessionToken();
 
         StreamingListener listener = new StreamingListener() {

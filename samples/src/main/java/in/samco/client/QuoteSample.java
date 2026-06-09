@@ -1,4 +1,6 @@
-package in.samco;
+package in.samco.client;
+
+import java.util.Properties;
 
 import in.samco.api.QuoteApi;
 import in.samco.api.update.SessionTokenApi;
@@ -13,15 +15,21 @@ import in.samco.util.SamcoConstants;
  * Calls QuoteApi.getQuote with the JWT obtained from the Session Token API.
  * The SDK forwards the JWT as the x-session-token header.
  *
- * See ta-api-docs/quote/get-quote.md.
+ * See https://docs-tradeapi.samco.in/quote/get-quote.html.
  */
 public class QuoteSample {
 
     public static void main(String[] args) throws Exception {
+        Properties cfg = QuickStartSample.loadConfig();
+        QuickStartSample.requireRealCredentials(cfg);
+        run(cfg);
+    }
+
+    public static void run(Properties cfg) throws Exception {
 
         // 1. Obtain a session JWT (re-use across many calls within its TTL).
         SessionTokenResponse session = new SessionTokenApi()
-                .generate("<AES_ENCRYPTED_API_KEY>", "<AES_ENCRYPTED_API_SECRET>");
+                .generate(QuickStartSample.apiKey(cfg), QuickStartSample.apiSecret(cfg));
         String sessionToken = session.getSessionToken();
 
         // 2. Fetch a quote.

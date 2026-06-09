@@ -1,4 +1,6 @@
-package in.samco;
+package in.samco.client;
+
+import java.util.Properties;
 
 import in.samco.api.OrdersApi;
 import in.samco.api.update.SessionTokenApi;
@@ -13,15 +15,21 @@ import in.samco.util.SamcoConstants;
  * exchange and rests until either the limit price is hit or the order is
  * cancelled / expired.
  *
- * See ta-api-docs/order/place-order.md.
+ * See https://docs-tradeapi.samco.in/order/place-order.html.
  */
 public class PlaceOrderSample {
 
     public static void main(String[] args) throws Exception {
+        Properties cfg = QuickStartSample.loadConfig();
+        QuickStartSample.requireRealCredentials(cfg);
+        run(cfg);
+    }
+
+    public static void run(Properties cfg) throws Exception {
 
         // 1. Session JWT.
         String sessionToken = new SessionTokenApi()
-                .generate("<AES_ENCRYPTED_API_KEY>", "<AES_ENCRYPTED_API_SECRET>")
+                .generate(QuickStartSample.apiKey(cfg), QuickStartSample.apiSecret(cfg))
                 .getSessionToken();
 
         // 2. Build a LIMIT BUY order: 1 share of IDEA on NSE @ Rs 13.40, CNC, DAY validity.

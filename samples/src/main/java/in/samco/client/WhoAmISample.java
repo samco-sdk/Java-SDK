@@ -1,8 +1,9 @@
-package in.samco;
+package in.samco.client;
+
+import java.util.Properties;
 
 import in.samco.api.update.SessionTokenApi;
 import in.samco.api.update.WhoAmIApi;
-import in.samco.model.SessionTokenResponse;
 import in.samco.model.WhoAmIResponse;
 
 /**
@@ -13,14 +14,20 @@ import in.samco.model.WhoAmIResponse;
  * to debug `403 — The IP is not the registered static IP` errors. Does NOT
  * consume the SEBI weekly IP-update slot.
  *
- * See ta-api-docs/static-ip/whoami.md.
+ * See https://docs-tradeapi.samco.in/static-ip/whoami.html.
  */
 public class WhoAmISample {
 
     public static void main(String[] args) throws Exception {
+        Properties cfg = QuickStartSample.loadConfig();
+        QuickStartSample.requireRealCredentials(cfg);
+        run(cfg);
+    }
+
+    public static void run(Properties cfg) throws Exception {
 
         String sessionToken = new SessionTokenApi()
-                .generate("<AES_ENCRYPTED_API_KEY>", "<AES_ENCRYPTED_API_SECRET>")
+                .generate(QuickStartSample.apiKey(cfg), QuickStartSample.apiSecret(cfg))
                 .getSessionToken();
 
         WhoAmIResponse whoAmI = new WhoAmIApi().whoami(sessionToken);
