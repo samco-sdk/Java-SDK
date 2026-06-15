@@ -6,7 +6,7 @@
 
     <groupId>in.samco</groupId>
     <artifactId>samco-bridge-java-samples</artifactId>
-    <version>3.2.0</version>
+    <version>3.2.1</version>
     <packaging>jar</packaging>
 
     <name>samco-bridge-java-samples</name>
@@ -19,7 +19,7 @@
 
     <dependencies>
         <!--
-          The SDK JAR lives at ../dist/samco-bridge-java-3.2.0.jar.
+          The SDK JAR lives at ../dist/samco-bridge-java-3.2.1.jar.
           `system` scope points Maven straight at that file so a fresh-clone
           `mvn clean install` Just Works — no `mvn install:install-file`
           bootstrap step required.
@@ -31,9 +31,9 @@
         <dependency>
             <groupId>in.samco</groupId>
             <artifactId>samco-bridge-java</artifactId>
-            <version>3.2.0</version>
+            <version>3.2.1</version>
             <scope>system</scope>
-            <systemPath>${project.basedir}/../dist/samco-bridge-java-3.2.0.jar</systemPath>
+            <systemPath>${project.basedir}/../dist/samco-bridge-java-3.2.1.jar</systemPath>
         </dependency>
 
         <!--
@@ -108,7 +108,7 @@
                         </goals>
                         <configuration>
                             <target>
-                                <unzip src="${project.basedir}/../dist/samco-bridge-java-3.2.0.jar"
+                                <unzip src="${project.basedir}/../dist/samco-bridge-java-3.2.1.jar"
                                        dest="${project.build.outputDirectory}">
                                     <patternset>
                                         <exclude name="META-INF/MANIFEST.MF"/>
@@ -125,7 +125,7 @@
 
             <!--
               Build a self-contained executable jar:
-                  java -jar target/samco-bridge-java-samples-3.2.0.jar
+                  java -jar target/samco-bridge-java-samples-3.2.1.jar
               The Main-Class is QuickStartSample, which runs every other
               sample in sequence against config.properties.
             -->

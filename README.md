@@ -28,7 +28,7 @@
    
 ### Prerequisites 
 
-* Java 17 and above (the 3.2.0 build targets `maven.compiler.release=17`).
+* Java 17 and above (the 3.2.1 build targets `maven.compiler.release=17`).
 
 
 ### Prerequisites (One-Time Setup)
@@ -67,31 +67,31 @@ Starting with **v3.2.0**, the recommended way to authenticate is the **Session T
 
 1. Get StockNote Java Bridge Jar from the below link
 
-    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/samco-bridge-java-3.2.0.jar
+    *  https://github.com/samco-sdk/Java-SDK/blob/master/dist/samco-bridge-java-3.2.1.jar
 
 2. Setup Jar File
 
     * For maven user
 
-    * Drop `samco-bridge-java-3.2.0.jar` into a folder inside your project (for example `lib/`) and add the dependency below to your `pom.xml`. Then run `mvn clean install` (or `mvn clean package`) — Maven will pick the jar up directly from the path, no `mvn install:install-file` bootstrap required.
+    * Drop `samco-bridge-java-3.2.1.jar` into a folder inside your project (for example `lib/`) and add the dependency below to your `pom.xml`. Then run `mvn clean install` (or `mvn clean package`) — Maven will pick the jar up directly from the path, no `mvn install:install-file` bootstrap required.
 
 	            <dependency>
 		           <groupId>in.samco</groupId>
 		           <artifactId>samco-bridge-java</artifactId>
-		           <version>3.2.0</version>
+		           <version>3.2.1</version>
 		           <scope>system</scope>
-		           <systemPath>${project.basedir}/lib/samco-bridge-java-3.2.0.jar</systemPath>
+		           <systemPath>${project.basedir}/lib/samco-bridge-java-3.2.1.jar</systemPath>
 	           </dependency>
 
      * For gradle user, drop the jar into a `libs/` folder and reference it directly:
 
 		    dependencies {
-   			                implementation files('libs/samco-bridge-java-3.2.0.jar')
+   			                implementation files('libs/samco-bridge-java-3.2.1.jar')
 			             }
 
      * Adding jar to build path in eclipse based IDE's 
      
-        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include samco-bridge-java-3.2.0.jar 
+        Goto  JavaBuild Path --> Libraries --> Add External JARs --> Include samco-bridge-java-3.2.1.jar 
             
 			   
 			   
@@ -150,7 +150,6 @@ Starting with **v3.2.0**, the recommended way to authenticate is the **Session T
  *  <a href="#modifyBasketOrder">ModifyBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
  *  <a href="#deleteBasketOrder">DeleteBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
  *  <a href="#executeBasket">ExecuteBasketOrder</a> &nbsp;<sup>NEW in 3.2.0</sup>
- *  <a href="#placeAtMarket">PlaceAtMarket</a> &nbsp;<sup>NEW in 3.2.0</sup>
  *  <a href="#basketSquareOff">BasketSquareOff</a> &nbsp;<sup>NEW in 3.2.0</sup>
  *  <a href="#modifyAndRetry">ModifyAndRetry</a> &nbsp;<sup>NEW in 3.2.0</sup>
  *  <a href="#basketSpanCalculator">BasketSpanCalculator</a> &nbsp;<sup>NEW in 3.2.0</sup>
@@ -1153,7 +1152,7 @@ BulkOrderResponse resp = ordersApi.bulkOrder(sessionToken, bulk);
 
 ###  <h3 id="modify_order">Modify Order:</h3>
 
-   User would be able to modify some attributes of an order as long as it is with open/pending status in system. For modification order identifier is mandatory. With order identifier you need to send the optional parameter(s) which needs to be modified. In case the optional parameters aren't sent, the default will be considered from the original order. Modifiable attributes include quantity, Order Type (L,MKT, SL,SL-M). This API cannot be used for modifying attributes of an executed/rejected/cancelled order. Only the attribute that needs to be modified should be sent in the request alongwith the Order Identifier.
+   User would be able to modify some attributes of an order as long as it is with open/pending status in system. For modification order identifier is mandatory. With order identifier you need to send the optional parameter(s) which needs to be modified. In case the optional parameters aren't sent, the default will be considered from the original order. Modifiable attributes include quantity, Order Type (L, SL). This API cannot be used for modifying attributes of an executed/rejected/cancelled order. Only the attribute that needs to be modified should be sent in the request alongwith the Order Identifier.
 
         
 #### Parameters:
@@ -2301,16 +2300,6 @@ Executes every order in the basket using its configured `orderType` / `price` / 
 #### Sample ExecuteBasket Request:
 ```java
 BasketResponse resp = new BasketOrderApi().executeBasket(sessionToken, basketId);
-```
-
-
-### <h3 id="placeAtMarket">PlaceAtMarket (v3.2.0):</h3>
-
-Executes every order in the basket at market price (overriding individual order types).
-
-#### Sample PlaceAtMarket Request:
-```java
-BasketResponse resp = new BasketOrderApi().placeAtMarket(sessionToken, basketId);
 ```
 
 

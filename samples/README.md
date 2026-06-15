@@ -1,6 +1,6 @@
 # SAMCO Stocknote Java Bridge — Samples
 
-Runnable Java samples that exercise the v3.2.0 Trade APIs. For an overview of the SDK itself, see the [top-level README](../README.md).
+Runnable Java samples that exercise the v3.2.1 Trade APIs. For an overview of the SDK itself, see the [top-level README](../README.md).
 
 Each sample is a self-contained `main`-class file; they share no state. Pick the one that matches the API you want to try, replace the placeholder credentials, and run it with `mvn exec:java`.
 
@@ -8,7 +8,7 @@ Each sample is a self-contained `main`-class file; they share no state. Pick the
 
 - **Java 17+** (the SDK is compiled with `maven.compiler.release=17`).
 - **Maven 3.6+**.
-- The SDK JAR at `../dist/samco-bridge-java-3.2.0.jar`.
+- The SDK JAR at `../dist/samco-bridge-java-3.2.1.jar`.
 - A SAMCO trading account with:
   - An OAuth app created in the [Web Dashboard](https://docs-tradeapi.samco.in/dashboard/user-manual) (gives you `apiKey` + `apiSecret`).
   - At least one static IP registered for that app — order-related calls reject traffic from non-whitelisted IPs.
@@ -23,10 +23,10 @@ mvn -U clean install
 
 (or `mvn -U clean package` if you do not want to install the samples artifact into your local `~/.m2/repository/`).
 
-The samples `pom.xml` references the SDK JAR directly via a `system`-scoped dependency on `../dist/samco-bridge-java-3.2.0.jar`, so no separate `mvn install:install-file` bootstrap is required — a fresh clone builds out of the box.
+The samples `pom.xml` references the SDK JAR directly via a `system`-scoped dependency on `../dist/samco-bridge-java-3.2.1.jar`, so no separate `mvn install:install-file` bootstrap is required — a fresh clone builds out of the box.
 
 The build produces a self-contained fat-jar at
-`target/samco-bridge-java-samples-3.2.0.jar` and seeds an editable
+`target/samco-bridge-java-samples-3.2.1.jar` and seeds an editable
 `target/config.properties` next to it.
 
 ## 2. Configure credentials
@@ -49,7 +49,7 @@ external file (or one in your working directory) before running.
 ## 3. Run as a self-contained jar
 
 ```bash
-java -jar target/samco-bridge-java-samples-3.2.0.jar
+java -jar target/samco-bridge-java-samples-3.2.1.jar
 ```
 
 The fat-jar's default `Main-Class` is `in.samco.client.QuickStartSample`. It loads
